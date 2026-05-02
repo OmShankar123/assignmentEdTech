@@ -83,7 +83,7 @@ export default function CourseDetail() {
             className="w-10 h-10 bg-white/90 rounded-full justify-center items-center shadow-sm"
             onPress={() => router.back()}
           >
-            <Feather color="black" name="arrow-left" size={20} />
+            <Feather color={Colors.text} name="arrow-left" size={20} />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -91,8 +91,8 @@ export default function CourseDetail() {
             onPress={() => toggleBookmark(course._id)}
           >
             <Ionicons
-              color={Colors.error}
-              name={isBookmarked ? 'heart' : 'heart-outline'}
+              color={isBookmarked ? Colors.primary : Colors.secondary}
+              name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
               size={20}
             />
           </TouchableOpacity>
@@ -108,7 +108,7 @@ export default function CourseDetail() {
               style={{ width: '100%', height: '100%' }}
               transition={500}
             />
-            <View className="absolute bottom-6 left-5 bg-black/40 px-3 py-1.5 rounded-lg">
+            <View className="absolute bottom-6 left-5 bg-text/40 px-3 py-1.5 rounded-lg">
               <Typography className="text-white font-sans-bold uppercase" variant="caption">
                 {t('common.course')}
               </Typography>
@@ -130,7 +130,7 @@ export default function CourseDetail() {
             </View>
 
             {/* Title & Price */}
-            <Typography className="text-black mb-3 leading-tight" variant="h1">
+            <Typography className="text-text mb-3 leading-tight" variant="h1">
               {course.name}
             </Typography>
 
@@ -163,7 +163,7 @@ export default function CourseDetail() {
                   >
                     {t('common.instructor')}
                   </Typography>
-                  <Typography className="text-black mb-1" variant="h3">
+                  <Typography className="text-text mb-1" variant="h3">
                     {course.instructor.name.first} {course.instructor.name.last}
                   </Typography>
                   <Typography className="text-primary font-sans-semibold" variant="caption">
@@ -204,7 +204,7 @@ export default function CourseDetail() {
             </View>
 
             {/* About Section */}
-            <Typography className="text-black mb-3" variant="h3">
+            <Typography className="text-text mb-3" variant="h3">
               {t('course.description')}
             </Typography>
             <Typography className="text-secondary leading-7 mb-8 text-[15px]" variant="body">
@@ -222,7 +222,7 @@ export default function CourseDetail() {
             <Typography className="text-gray-400" variant="caption">
               {t('course.total_price')}
             </Typography>
-            <Typography className="text-black text-2xl" variant="h2">
+            <Typography className="text-text text-2xl" variant="h2">
               ${course.price}
             </Typography>
           </View>

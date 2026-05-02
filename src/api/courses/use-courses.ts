@@ -14,43 +14,56 @@ export const useCourses = createInfiniteQuery<CoursesResponse, UseCoursesParams,
   fetcher: async (params, { pageParam, queryKey }) => {
     const [, queryParams] = queryKey as [string, UseCoursesParams];
 
-    // We use the Public API for guaranteed list content, but normalize it to our Ecommerce shape
-    return client({
-      url: '/public/randomproducts',
-      method: 'GET',
-      params: {
-        page: pageParam,
-        limit: 10,
-        query: queryParams?.query,
-      },
-    }).then((response) => {
-      const originalData = response.data.data;
+    // Fetch both courses and "instructors" (random users) in parallel for a rich UI
+    const [coursesRes, instructorsRes] = await Promise.all([
+      client({
+        url: '/public/randomproducts',
+        method: 'GET',
+        params: {
+          page: pageParam,
+          limit: 10,
+          query: queryParams?.query,
+        },
+      }),
+      client({
+        url: '/public/randomusers',
+        method: 'GET',
+        params: {
+          page: pageParam,
+          limit: 10,
+        },
+      }),
+    ]);
 
-      // Normalize the Public API response to our Ecommerce Course shape
-      const normalizedProducts = originalData.data.map((item: any) => ({
+    const originalData = coursesRes.data.data;
+    const instructors = instructorsRes.data.data.data;
+
+    // Normalize and attach instructors
+    const normalizedProducts = originalData.data.map((item: any, index: number) => ({
+      _id: String(item.id),
+      name: item.title,
+      description: item.description,
+      price: item.price,
+      category: item.category,
+      mainImage: {
+        url: item.thumbnail,
         _id: String(item.id),
-        name: item.title,
-        description: item.description,
-        price: item.price,
-        category: item.category,
-        mainImage: {
-          url: item.thumbnail,
-          _id: String(item.id),
-        },
-        stock: item.stock || 50,
-      }));
+      },
+      stock: item.stock || 50,
+      // Attach an instructor from the random users list if available
+      instructor: instructors?.length > 0 ? instructors[index % instructors.length] : undefined,
+    }));
 
-      return {
-        ...response.data,
-        data: {
-          products: normalizedProducts,
-          totalItems: originalData.totalItems,
-          page: originalData.page,
-          limit: originalData.limit,
-          totalPages: originalData.totalPages,
-        },
-      };
-    });
+    return {
+      ...coursesRes.data,
+      data: {
+        products: normalizedProducts,
+        totalItems: originalData.totalItems,
+        page: originalData.page,
+        limit: originalData.limit,
+        totalPages: originalData.totalPages,
+      },
+    };
   },
   getNextPageParam: (lastPage) => {
     const { page, totalPages } = lastPage.data;

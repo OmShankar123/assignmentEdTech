@@ -53,7 +53,7 @@ export default function Login() {
       <View className="flex-1 justify-between pb-10 pt-5">
         <View>
           <Animated.View entering={FadeInDown.duration(800).damping(12)}>
-            <Typography className="text-black text-left mb-2" variant="h1">
+            <Typography className="text-text text-left mb-2" variant="h1">
               {t('auth.sign_in')}
             </Typography>
             <Typography className="text-secondary text-left mb-8" variant="body">

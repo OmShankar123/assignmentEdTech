@@ -1,0 +1,78 @@
+{
+  "common": {
+    "explore": "खोजें",
+    "all": "सभी",
+    "course": "पाठ्यक्रम",
+    "instructor": "प्रशिक्षक",
+    "courses": "पाठ्यक्रम",
+    "bookmarks": "बुकमार्क",
+    "profile": "प्रोफ़ाइल",
+    "search_placeholder": "पाठ्यक्रमों के लिए खोजें...",
+    "no_courses": "इस समय कोई पाठ्यक्रम नहीं मिला।",
+    "view_details": "विवरण देखें",
+    "no_bookmarks_title": "अभी तक कोई बुकमार्क नहीं है",
+    "no_bookmarks_desc": "त्वरित पहुँच के लिए आपके द्वारा बुकमार्क किए गए पाठ्यक्रम यहाँ दिखाई देंगे।",
+    "something_went_wrong": "कुछ गलत हो गया",
+    "error_occurred": "एक त्रुटि हुई",
+    "go_back": "वापस जाएं",
+    "logout": "लॉगआउट",
+    "ok": "ठीक है",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "edit": "संपादित करें",
+    "delete": "हटाएं",
+    "back": "पीछे"
+  },
+  "course": {
+    "content": "पाठ्यक्रम सामग्री",
+    "reviews_count": "{{count}} समीक्षाएं",
+    "expert_in": "{{category}} में विशेषज्ञ",
+    "duration": "अवधि",
+    "students": "छात्र",
+    "description": "विवरण",
+    "total_price": "कुल मूल्य",
+    "enroll_now": "अभी नामांकन करें"
+  },
+  "categories": {
+    "development": "विकास",
+    "design": "डिज़ाइन",
+    "business": "व्यवसाय",
+    "marketing": "मार्केटिंग",
+    "laptops": "टेक",
+    "smartphones": "मोबाइल"
+  },
+  "auth": {
+    "sign_in": "साइन इन करें",
+    "sign_up": "साइन अप करें",
+    "welcome_back": "वापसी पर स्वागत है! जारी रखने के लिए साइन इन करें।",
+    "join_us": "हमसे जुड़ें और आज ही सीखना शुरू करें।",
+    "create_account": "खाता बनाएं",
+    "username": "उपयोगकर्ता नाम",
+    "username_placeholder": "अपना उपयोगकर्ता नाम दर्ज करें",
+    "email": "ईमेल",
+    "email_placeholder": "अपना ईमेल दर्ज करें",
+    "password": "पासवर्ड",
+    "login_success": "सफलता",
+    "login_success_msg": "वापसी पर स्वागत है, {{username}}!",
+    "register_success": "खाता बनाया गया",
+    "register_success_msg": "अब आप अपने खाते से साइन इन कर सकते हैं।",
+    "dont_have_account": "खाता नहीं है?",
+    "already_have_account": "पहले से ही एक खाता है?"
+  },
+  "courses": {
+    "instructors": "प्रशिक्षक",
+    "about": "इस पाठ्यक्रम के बारे में",
+    "curriculum": "पाठ्यक्रम पाठ्यचर्या",
+    "enrolled": "नामांकित",
+    "open_portal": "पोर्टल खोलें",
+    "enroll_now": "अभी नामांकन करें",
+    "lessons": "पाठ",
+    "reviews": "समीक्षाएं"
+  },
+  "notifications": {
+    "engagement_title": "सीखते रहें!",
+    "engagement_body": "नए पाठ्यक्रमों की खोज किए हुए काफी समय हो गया है। देखें कि नया क्या है!",
+    "bookmark_milestone_title": "कोर्स कलेक्टर!",
+    "bookmark_milestone_body": "आपने 5 या अधिक पाठ्यक्रम बुकमार्क किए हैं। आज एक क्यों नहीं शुरू करते?"
+  }
+}

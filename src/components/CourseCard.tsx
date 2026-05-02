@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import { AntDesign, Feather } from '@expo/vector-icons';
+import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 
@@ -62,10 +62,10 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
             toggleBookmark(course._id);
           }}
         >
-          <Feather
+          <Ionicons
             color={isBookmarked ? Colors.primary : Colors.secondary}
-            name={isBookmarked ? 'bookmark' : 'bookmark'}
-            size={18}
+            name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
+            size={20}
           />
         </TouchableOpacity>
 
