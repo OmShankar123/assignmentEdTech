@@ -1,32 +1,29 @@
+import type { User } from '@/api/auth/types';
 import { storage } from '@/storage';
+import { clearTokens } from '@/storage/token';
 
 import { createPersistedStore } from './storage';
-
-export interface User {
-  email: string;
-  [key: string]: unknown;
-}
 
 interface UserState {
   isLoggedIn: boolean;
   user: User | null;
   login: (user: User) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
-export const useUserStore = createPersistedStore<UserState>(
-  'user-storage', // Just the key name - storage is pre-configured!
-  (set) => ({
-    isLoggedIn: false,
-    user: null,
+export const useUserStore = createPersistedStore<UserState>('user-storage', (set) => ({
+  isLoggedIn: false,
+  user: null,
 
-    login: (user: User) => {
-      set({ isLoggedIn: true, user });
-    },
+  login: (user: User) => {
+    set({ isLoggedIn: true, user });
+  },
 
-    logout: () => {
-      storage.clearAll();
-      set({ isLoggedIn: false, user: null });
-    },
-  }),
-);
+  logout: async () => {
+    // Clear sensitive token from SecureStore
+    await clearTokens();
+    // Clear non-sensitive data from MMKV
+    storage.clearAll();
+    set({ isLoggedIn: false, user: null });
+  },
+}));

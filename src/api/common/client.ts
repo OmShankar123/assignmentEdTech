@@ -31,8 +31,8 @@ import { useUserStore } from '@/store/useUserStore';
  * to handle different backend conventions.
  */
 interface ErrorResponse {
-  error?: string[];
-  errors?: string[];
+  error?: string | string[];
+  errors?: string[] | Record<string, string>[];
   message?: string;
   statusCode?: number;
 }
@@ -55,6 +55,7 @@ interface QueueItem {
 declare module 'axios' {
   interface InternalAxiosRequestConfig {
     _retryCount?: number;
+    _skipErrorToast?: boolean;
   }
 }
 
@@ -109,8 +110,8 @@ export const client = axios.create({
  * This avoids the jarring UX of being silently kicked to the
  * login screen without explanation.
  */
-const forceLogout = () => {
-  clearTokens();
+const forceLogout = async () => {
+  await clearTokens();
 
   Alert.alert(
     'Session Expired',
@@ -187,7 +188,7 @@ const processQueue = (error: Error | null, token: string | null = null) => {
  * @throws Error if no refresh token is stored or the API call fails.
  */
 const refreshToken = async (): Promise<string> => {
-  const currentRefreshToken = getRefreshToken();
+  const currentRefreshToken = await getRefreshToken();
 
   if (!currentRefreshToken) {
     throw new Error('No refresh token available');
@@ -216,6 +217,15 @@ const refreshToken = async (): Promise<string> => {
 
 client.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    // Log the request in development
+    if (__DEV__) {
+      console.log(
+        `➡️ [${config.method?.toUpperCase()}] ${config.url}`,
+        config.params ? `\nParams: ${JSON.stringify(config.params, null, 2)}` : '',
+        config.data ? `\nData: ${JSON.stringify(config.data, null, 2)}` : '',
+      );
+    }
+
     // Check network connectivity before making the request.
     // This gives users an immediate "No internet" message instead
     // of waiting for the request to time out after 30 seconds.
@@ -228,7 +238,7 @@ client.interceptors.request.use(
 
     // Read the access token from encrypted MMKV storage
     // and attach it as a Bearer token in the Authorization header.
-    const token = getAccessToken();
+    const token = await getAccessToken();
 
     if (token) {
       config.headers.set('Authorization', `Bearer ${token}`);
@@ -239,11 +249,6 @@ client.interceptors.request.use(
     // multipart boundary automatically.
     if (config.data instanceof FormData) {
       config.headers.set('Content-Type', 'multipart/form-data');
-    }
-
-    // Dev-only logging for easy debugging during development
-    if (__DEV__) {
-      console.log(`➡️ [${config.method?.toUpperCase()}] ${config.url}`, config.params ?? '');
     }
 
     return config;
@@ -263,10 +268,11 @@ client.interceptors.request.use(
 
 client.interceptors.response.use(
   (response: AxiosResponse) => {
-    // Dev-only success logging
+    // Log the response in development
     if (__DEV__) {
       console.log(
-        `✅ [${response.config.method?.toUpperCase()}] ${response.config.url} — ${response.status}`,
+        `✅ [${response.status}] ${response.config.url}`,
+        `\nResponse: ${JSON.stringify(response.data, null, 2)}`,
       );
     }
 
@@ -360,15 +366,43 @@ client.interceptors.response.use(
     //   - { error: ["msg1", "msg2"] }  or  { errors: ["msg1"] }
     //   - { message: "Something went wrong" }
     //
-    if (error.response?.data) {
-      const { error: apiError, errors, message } = error.response.data;
-      const errorList = apiError ?? errors;
-      const errorMessage = errorList ? errorList.join(', ') : message || 'Something went wrong';
+    if (error.response?.data && !originalRequest?._skipErrorToast) {
+      const data = error.response.data as ErrorResponse;
+      let errorMessage = '';
 
-      showErrorToast({ title: errorMessage });
-    } else if (!error.response) {
+      if (Array.isArray(data.errors)) {
+        errorMessage = data.errors
+          .map((err) => {
+            if (typeof err === 'string') return err;
+            if (typeof err === 'object' && err !== null) return Object.values(err)[0];
+            return String(err);
+          })
+          .filter((msg) => typeof msg === 'string')
+          .join(', ');
+      } else if (Array.isArray(data.error)) {
+        errorMessage = data.error.join(', ');
+      } else if (typeof data.error === 'string') {
+        errorMessage = data.error;
+      }
+
+      // If we still don't have a specific error message, use the top-level message
+      if (!errorMessage && data.message) {
+        errorMessage =
+          typeof data.message === 'string' ? data.message : JSON.stringify(data.message);
+      }
+
+      showErrorToast({ title: errorMessage || 'Something went wrong' });
+    } else if (!error.response && !originalRequest?._skipErrorToast) {
       // No response at all — likely a network timeout or DNS failure
       showErrorToast({ title: 'Network error. Please try again.' });
+    }
+
+    // Log the error in development
+    if (__DEV__) {
+      console.log(
+        `❌ [${error.response?.status || 'NETWORK'}] ${originalRequest?.url}`,
+        `\nError: ${JSON.stringify(error.response?.data || error.message, null, 2)}`,
+      );
     }
 
     return Promise.reject(error);

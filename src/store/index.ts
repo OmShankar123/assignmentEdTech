@@ -1,7 +1,7 @@
 import { useUserStore } from './useUserStore';
 
-export type { User } from './useUserStore';
 export { useUserStore } from './useUserStore';
+export type { User } from '@/api/auth/types';
 
 /**
  * Rehydrates all persisted Zustand stores from MMKV.

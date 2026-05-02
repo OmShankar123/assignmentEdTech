@@ -1,6 +1,6 @@
 import React from 'react';
 import { type Control, Controller, type FieldPath, type FieldValues } from 'react-hook-form';
-import { type TextInputProps } from 'react-native';
+import { type ImageSourcePropType, type TextInputProps } from 'react-native';
 
 import TextField from './TextField';
 
@@ -8,6 +8,10 @@ interface Props<T extends FieldValues> extends TextInputProps {
   control: Control<T>;
   name: FieldPath<T>;
   label?: string;
+  endIcon?: ImageSourcePropType;
+  icon?: ImageSourcePropType;
+  rightIcon?: React.ReactNode;
+  onPressRightIcon?: () => void;
 }
 
 export const ControlledTextField = <T extends FieldValues>({

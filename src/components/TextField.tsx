@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   type TextInputProps,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -14,12 +15,26 @@ interface TextFieldProps extends TextInputProps {
   className?: string;
   endIcon?: ImageSourcePropType;
   icon?: ImageSourcePropType;
+  rightIcon?: React.ReactNode;
+  onPressRightIcon?: () => void;
   error?: string;
 }
 
 const TextField = forwardRef<TextInput, TextFieldProps>(
   (
-    { label, placeholder = '', className = '', endIcon, icon, error, onFocus, onBlur, ...rest },
+    {
+      label,
+      placeholder = '',
+      className = '',
+      endIcon,
+      icon,
+      rightIcon,
+      onPressRightIcon,
+      error,
+      onFocus,
+      onBlur,
+      ...rest
+    },
     ref,
   ) => {
     const [isFocused, setIsFocused] = useState(false);
@@ -56,6 +71,11 @@ const TextField = forwardRef<TextInput, TextFieldProps>(
             }}
             {...rest}
           />
+          {rightIcon && (
+            <TouchableOpacity disabled={!onPressRightIcon} onPress={onPressRightIcon}>
+              <View className="ml-2">{rightIcon}</View>
+            </TouchableOpacity>
+          )}
           {endIcon && (
             <View>
               <Image className="w-6 h-6 ml-2" resizeMode="contain" source={endIcon} />

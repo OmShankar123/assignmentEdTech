@@ -10,7 +10,7 @@ interface ScreenWrapperProps {
   className?: string;
   showLoader?: boolean;
   scrollable?: boolean;
-  showBackground?: boolean;
+  showBackgroundShape?: boolean;
 }
 
 const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
@@ -18,7 +18,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   className = '',
   showLoader = false,
   scrollable = false,
-  showBackground = true,
+  showBackgroundShape = true,
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -30,7 +30,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   const content = (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className="flex-1"
+      className="flex-1 px-5"
     >
       {scrollable ? (
         <ScrollView
@@ -46,7 +46,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
     </KeyboardAvoidingView>
   );
 
-  if (showBackground) {
+  if (showBackgroundShape) {
     return (
       <View className="flex-1 bg-white">
         <ImageBackground

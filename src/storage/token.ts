@@ -1,48 +1,38 @@
-import { getItem, removeItem, setItem } from '@/storage';
-
-// ──────────────────────────────────────────────
-//  MMKV Storage Keys
-// ──────────────────────────────────────────────
+import * as SecureStore from 'expo-secure-store';
 
 const TOKEN_KEY = 'auth_access_token';
 const REFRESH_TOKEN_KEY = 'auth_refresh_token';
 
-// ──────────────────────────────────────────────
-//  Access Token
-// ──────────────────────────────────────────────
-
-export const getAccessToken = (): string | null => getItem<string>(TOKEN_KEY);
-
-export const setAccessToken = (token: string): void => setItem(TOKEN_KEY, token);
-
-export const removeAccessToken = (): void => removeItem(TOKEN_KEY);
-
-// ──────────────────────────────────────────────
-//  Refresh Token
-// ──────────────────────────────────────────────
-
-export const getRefreshToken = (): string | null => getItem<string>(REFRESH_TOKEN_KEY);
-
-export const setRefreshToken = (token: string): void => setItem(REFRESH_TOKEN_KEY, token);
-
-export const removeRefreshToken = (): void => removeItem(REFRESH_TOKEN_KEY);
-
-// ──────────────────────────────────────────────
-//  Convenience
-// ──────────────────────────────────────────────
-
-/**
- * Store both tokens at once (e.g. after login/signup or token refresh).
- */
-export const setTokens = (accessToken: string, refreshToken: string): void => {
-  setAccessToken(accessToken);
-  setRefreshToken(refreshToken);
+export const getAccessToken = async (): Promise<string | null> => {
+  return await SecureStore.getItemAsync(TOKEN_KEY);
 };
 
-/**
- * Clear both tokens (e.g. on logout).
- */
-export const clearTokens = (): void => {
-  removeAccessToken();
-  removeRefreshToken();
+export const setAccessToken = async (token: string): Promise<void> => {
+  await SecureStore.setItemAsync(TOKEN_KEY, token);
+};
+
+export const removeAccessToken = async (): Promise<void> => {
+  await SecureStore.deleteItemAsync(TOKEN_KEY);
+};
+
+export const getRefreshToken = async (): Promise<string | null> => {
+  return await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+};
+
+export const setRefreshToken = async (token: string): Promise<void> => {
+  await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, token);
+};
+
+export const removeRefreshToken = async (): Promise<void> => {
+  await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
+};
+
+export const setTokens = async (accessToken: string, refreshToken: string): Promise<void> => {
+  await setAccessToken(accessToken);
+  await setRefreshToken(refreshToken);
+};
+
+export const clearTokens = async (): Promise<void> => {
+  await removeAccessToken();
+  await removeRefreshToken();
 };

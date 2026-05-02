@@ -1,102 +1,121 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import Toast from 'react-native-toast-message';
+import { Ionicons } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
-import { z } from 'zod';
 
+import { type LoginFormData, loginSchema } from '@/api/auth/schemas';
+import { useLogin } from '@/api/auth/use-login';
 import Button from '@/components/Button';
 import { ControlledTextField } from '@/components/ControlledTextField';
+import Header from '@/components/Header';
 import ScreenWrapper from '@/components/ScreenWrapper';
+import Typography from '@/components/Typography';
+import { setTokens } from '@/storage/token';
 import { useUserStore } from '@/store/useUserStore';
 
-const loginSchema = z.object({
-  email: z
-    .string({ error: 'Email is required' })
-    .min(1, 'Email is required')
-    .email('Please enter a valid email'),
-
-  password: z
-    .string({ error: 'Password is required' })
-    .min(1, 'Password is required')
-    .min(6, 'Password must be at least 6 characters'),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
-
 export default function Login() {
-  const login = useUserStore((state) => state.login);
+  const { t } = useTranslation();
+  const loginStore = useUserStore((state) => state.login);
   const router = useRouter();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const { mutate: loginMutation, isPending } = useLogin();
 
   const { control, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
   });
 
   const onSubmit = (data: LoginFormData) => {
-    login({ email: data.email });
+    loginMutation(data, {
+      onSuccess: async (response) => {
+        const { user, accessToken, refreshToken } = response.data;
+        await setTokens(accessToken, refreshToken);
+        loginStore(user);
+        Toast.show({
+          type: 'success',
+          text1: t('auth.login_success'),
+          text2: t('auth.login_success_msg', { username: user.username }),
+        });
+      },
+    });
   };
 
   return (
-    <ScreenWrapper className="flex-1 px-6 justify-center">
-      <Animated.View entering={FadeInDown.duration(800)}>
-        <Text className="text-4xl font-sans-bold text-black mb-2">Welcome Back</Text>
-        <Text className="text-base font-sans-regular text-secondary mb-10">
-          Sign in to continue your learning journey.
-        </Text>
-      </Animated.View>
+    <ScreenWrapper scrollable showBackgroundShape={true}>
+      <Header showBackButton={false} />
 
-      <View className="w-full">
-        <Animated.View entering={FadeInDown.delay(200).duration(800)}>
-          <ControlledTextField<LoginFormData>
-            autoCapitalize="none"
-            autoComplete="email"
-            control={control}
-            keyboardType="email-address"
-            label="Email Address"
-            name="email"
-            placeholder="e.g. hello@example.com"
-            returnKeyType="next"
-          />
-        </Animated.View>
+      <View className="flex-1 justify-between pb-10 pt-5">
+        <View>
+          <Animated.View entering={FadeInDown.duration(800).damping(12)}>
+            <Typography className="text-black text-left mb-2" variant="h1">
+              {t('auth.sign_in')}
+            </Typography>
+            <Typography className="text-secondary text-left mb-8" variant="body">
+              {t('auth.welcome_back')}
+            </Typography>
+          </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(400).duration(800)}>
-          <ControlledTextField<LoginFormData>
-            secureTextEntry
-            autoCapitalize="none"
-            autoComplete="password"
-            control={control}
-            label="Password"
-            name="password"
-            placeholder="********"
-            returnKeyType="done"
-          />
-        </Animated.View>
+          <View className="gap-y-4">
+            <Animated.View entering={FadeInDown.delay(100).duration(800).damping(12)}>
+              <ControlledTextField<LoginFormData>
+                autoCapitalize="none"
+                control={control}
+                label={t('auth.username')}
+                name="username"
+                placeholder="e.g. johndoe"
+              />
+            </Animated.View>
 
-        <Animated.View className="items-end mb-8" entering={FadeInDown.delay(500).duration(800)}>
-          <TouchableOpacity onPress={() => console.log('Forgot Password')}>
-            <Text className="text-primary font-sans-semibold text-sm">Forgot Password?</Text>
+            <Animated.View entering={FadeInDown.delay(200).duration(800).damping(12)}>
+              <ControlledTextField<LoginFormData>
+                control={control}
+                label={t('auth.password')}
+                name="password"
+                placeholder="********"
+                rightIcon={
+                  <Ionicons
+                    color="#6b7280"
+                    name={isPasswordVisible ? 'eye-off' : 'eye'}
+                    size={20}
+                  />
+                }
+                secureTextEntry={!isPasswordVisible}
+                onPressRightIcon={() => setIsPasswordVisible(!isPasswordVisible)}
+              />
+            </Animated.View>
+
+            <Animated.View
+              className="mt-8"
+              entering={FadeInDown.delay(400).duration(800).damping(12)}
+            >
+              <Button
+                isLoading={isPending}
+                title={t('auth.sign_in')}
+                onPress={handleSubmit(onSubmit)}
+              />
+            </Animated.View>
+          </View>
+        </View>
+
+        <Animated.View
+          className="mt-8 flex-row justify-center"
+          entering={FadeInDown.delay(700).duration(800).damping(12)}
+        >
+          <Typography className="text-secondary" variant="bodySmall">
+            {t('auth.dont_have_account')}{' '}
+          </Typography>
+          <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
+            <Typography className="text-primary" variant="bodySmallSemiBold">
+              {t('auth.sign_up')}
+            </Typography>
           </TouchableOpacity>
         </Animated.View>
       </View>
-
-      <Animated.View entering={FadeInDown.delay(600).duration(800)}>
-        <Button className="shadow-lg" title="Sign In" onPress={handleSubmit(onSubmit)} />
-      </Animated.View>
-
-      <Animated.View
-        className="mt-8 flex-row justify-center"
-        entering={FadeInDown.delay(800).duration(800)}
-      >
-        <Text className="text-secondary font-sans-regular">Don&apos;t have an account? </Text>
-        <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
-          <Text className="text-primary font-sans-bold">Sign Up</Text>
-        </TouchableOpacity>
-      </Animated.View>
     </ScreenWrapper>
   );
 }
