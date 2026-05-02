@@ -1,8 +1,7 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, View } from 'react-native';
 
-import { useCourses } from '@/api/courses/use-courses';
 import CourseCard from '@/components/CourseCard';
 import Header from '@/components/Header';
 import ScreenWrapper from '@/components/ScreenWrapper';
@@ -11,27 +10,12 @@ import { useBookmarkStore } from '@/store';
 
 export default function BookmarksScreen() {
   const { t } = useTranslation();
-  const { bookmarkedIds } = useBookmarkStore();
+  const bookmarks = useBookmarkStore((state) => state.bookmarks);
 
-  // Use the same default variables as Home to increase chance of cache hits and consistency
-  const { data: coursesData, isLoading } = useCourses();
-
-  const bookmarkedCourses = useMemo(() => {
-    if (!coursesData) return [];
-
-    // Flatten all pages and get all products
-    const allCourses = coursesData.pages.flatMap((page) => page.data.products);
-
-    // Filter by bookmarked IDs
-    // We check both _id and id for robustness during API normalization
-    return allCourses.filter(
-      (course) =>
-        bookmarkedIds.includes(course._id) || bookmarkedIds.includes(String((course as any).id)),
-    );
-  }, [coursesData, bookmarkedIds]);
+  const bookmarkedCourses = bookmarks;
 
   return (
-    <ScreenWrapper contentPadding={false} showLoader={isLoading}>
+    <ScreenWrapper contentPadding={false} showLoader={false}>
       <View className="flex-1 px-5">
         <Header showBackButton={false} title={t('common.bookmarks') || 'Bookmarks'} />
 

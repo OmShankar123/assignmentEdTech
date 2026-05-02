@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
+import { Ionicons } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 
@@ -14,10 +15,12 @@ import { ControlledTextField } from '@/components/ControlledTextField';
 import Header from '@/components/Header';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typography from '@/components/Typography';
+import { Colors } from '@/theme/colors';
 
 export default function Register() {
   const { t } = useTranslation();
   const router = useRouter();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { mutate: registerMutation, isPending } = useRegister();
 
   const { control, handleSubmit } = useForm<RegisterFormData>({
@@ -61,6 +64,7 @@ export default function Register() {
           <View className="gap-y-4">
             <Animated.View entering={FadeInDown.delay(100).duration(800).damping(12)}>
               <ControlledTextField<RegisterFormData>
+                autoCapitalize="none"
                 control={control}
                 label={t('auth.username')}
                 name="username"
@@ -81,11 +85,19 @@ export default function Register() {
 
             <Animated.View entering={FadeInDown.delay(300).duration(800).damping(12)}>
               <ControlledTextField<RegisterFormData>
-                secureTextEntry
                 control={control}
                 label={t('auth.password')}
                 name="password"
                 placeholder="********"
+                rightIcon={
+                  <Ionicons
+                    color={Colors.textSecondary}
+                    name={isPasswordVisible ? 'eye-off' : 'eye'}
+                    size={20}
+                  />
+                }
+                secureTextEntry={!isPasswordVisible}
+                onPressRightIcon={() => setIsPasswordVisible(!isPasswordVisible)}
               />
             </Animated.View>
 

@@ -18,8 +18,10 @@ interface CourseCardProps {
 const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   const router = useRouter();
   const { t } = useTranslation();
-  const { toggleBookmark, bookmarkedIds } = useBookmarkStore();
-  const isBookmarked = bookmarkedIds.includes(course._id);
+  const toggleBookmark = useBookmarkStore((state) => state.toggleBookmark);
+  const isBookmarked = useBookmarkStore((state) =>
+    state.bookmarks.some((b) => b._id === course._id),
+  );
 
   const handlePress = () => {
     router.push({
@@ -59,7 +61,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
           className="absolute top-4 right-4 w-10 h-10 bg-white/90 rounded-full items-center justify-center"
           onPress={(e) => {
             e.stopPropagation();
-            toggleBookmark(course._id);
+            toggleBookmark(course);
           }}
         >
           <Ionicons
@@ -95,6 +97,24 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         <Typography className="text-gray-400 mb-4 leading-6" numberOfLines={2} variant="bodySmall">
           {course.description}
         </Typography>
+
+        {/* Progress Bar (Assignment Requirement) */}
+        <View className="mb-6">
+          <View className="flex-row justify-between items-center mb-2">
+            <Typography className="text-secondary uppercase font-sans-bold" variant="caption">
+              {t('common.progress') || 'Progress'}
+            </Typography>
+            <Typography className="text-primary font-sans-bold" variant="caption">
+              {Math.round((course.progress || 0) * 100)}%
+            </Typography>
+          </View>
+          <View className="w-full h-2 bg-gray100 rounded-full overflow-hidden">
+            <View
+              className="h-full bg-primary"
+              style={{ width: `${Math.round((course.progress || 0) * 100)}%` }}
+            />
+          </View>
+        </View>
 
         {/* Footer: Instructor & Stats */}
         <View className="flex-row items-center justify-between border-t border-gray-50 pt-4">

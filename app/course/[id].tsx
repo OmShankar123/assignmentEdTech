@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
@@ -25,8 +26,8 @@ export default function CourseDetail() {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { toggleBookmark, bookmarkedIds } = useBookmarkStore();
-  const isBookmarked = id ? bookmarkedIds.includes(id) : false;
+  const toggleBookmark = useBookmarkStore((state) => state.toggleBookmark);
+  const isBookmarked = useBookmarkStore((state) => state.bookmarks.some((b) => b._id === id));
 
   const { data: response, isLoading } = useCourseDetails({
     variables: { id: id! },
@@ -88,7 +89,7 @@ export default function CourseDetail() {
 
           <TouchableOpacity
             className="w-10 h-10 bg-white/90 rounded-full justify-center items-center shadow-sm"
-            onPress={() => toggleBookmark(course._id)}
+            onPress={() => course && toggleBookmark(course)}
           >
             <Ionicons
               color={isBookmarked ? Colors.primary : Colors.secondary}
@@ -100,7 +101,11 @@ export default function CourseDetail() {
 
         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
           {/* Hero Section */}
-          <View className="bg-gray100 relative" style={{ height: 380 }}>
+          <Animated.View
+            className="bg-gray100 relative"
+            entering={FadeInDown.duration(800)}
+            style={{ height: 380 }}
+          >
             <Image
               cachePolicy="memory-disk"
               contentFit="cover"
@@ -113,11 +118,14 @@ export default function CourseDetail() {
                 {t('common.course')}
               </Typography>
             </View>
-          </View>
+          </Animated.View>
 
           <View className="px-5 pt-6 pb-32">
             {/* Rating Row */}
-            <View className="flex-row items-center mb-2">
+            <Animated.View
+              className="flex-row items-center mb-2"
+              entering={FadeInUp.delay(200).duration(600)}
+            >
               <View className="flex-row items-center mr-3">
                 <AntDesign color={Colors.star} name="star" size={14} />
                 <Typography className="ml-1 text-black" variant="bodySmallSemiBold">
@@ -127,22 +135,27 @@ export default function CourseDetail() {
               <Typography className="text-gray-400" variant="caption">
                 {String(t('course.reviews_count', { count: '1.2k' } as any))}
               </Typography>
-            </View>
+            </Animated.View>
 
             {/* Title & Price */}
-            <Typography className="text-text mb-3 leading-tight" variant="h1">
-              {course.name}
-            </Typography>
-
-            <View className="flex-row items-baseline mb-6">
-              <Typography className="text-primary text-2xl" variant="h2">
-                ${course.price}
+            <Animated.View entering={FadeInUp.delay(300).duration(600)}>
+              <Typography className="text-text mb-3 leading-tight" variant="h1">
+                {course.name}
               </Typography>
-            </View>
+
+              <View className="flex-row items-baseline mb-6">
+                <Typography className="text-primary text-2xl" variant="h2">
+                  ${course.price}
+                </Typography>
+              </View>
+            </Animated.View>
 
             {/* Enhanced Instructor Section */}
             {course.instructor && (
-              <View className="bg-gray-50/80 border border-gray100 p-5 rounded-[28px] mb-8 flex-row items-center">
+              <Animated.View
+                className="bg-gray-50/80 border border-gray100 p-5 rounded-[28px] mb-8 flex-row items-center"
+                entering={FadeInUp.delay(400).duration(600)}
+              >
                 <View className="relative" style={{ width: 64, height: 64 }}>
                   <Image
                     className="bg-gray200"
@@ -174,11 +187,14 @@ export default function CourseDetail() {
                 <TouchableOpacity className="bg-white w-10 h-10 rounded-full items-center justify-center shadow-sm border border-gray100">
                   <Feather color={Colors.primary} name="mail" size={18} />
                 </TouchableOpacity>
-              </View>
+              </Animated.View>
             )}
 
             {/* Specifications Grid */}
-            <View className="flex-row justify-between mb-8">
+            <Animated.View
+              className="flex-row justify-between mb-8"
+              entering={FadeInUp.delay(500).duration(600)}
+            >
               <View className="w-[48%] bg-white border border-gray100 p-4 rounded-2xl shadow-sm">
                 <View className="w-10 h-10 bg-primaryLight rounded-xl items-center justify-center mb-3">
                   <Feather color={Colors.primary} name="clock" size={20} />
@@ -201,15 +217,17 @@ export default function CourseDetail() {
                   1.5k +
                 </Typography>
               </View>
-            </View>
+            </Animated.View>
 
             {/* About Section */}
-            <Typography className="text-text mb-3" variant="h3">
-              {t('course.description')}
-            </Typography>
-            <Typography className="text-secondary leading-7 mb-8 text-[15px]" variant="body">
-              {course.description}
-            </Typography>
+            <Animated.View entering={FadeInUp.delay(600).duration(600)}>
+              <Typography className="text-text mb-3" variant="h3">
+                {t('course.description')}
+              </Typography>
+              <Typography className="text-secondary leading-7 mb-8 text-[15px]" variant="body">
+                {course.description}
+              </Typography>
+            </Animated.View>
           </View>
         </ScrollView>
 

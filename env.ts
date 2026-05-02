@@ -34,6 +34,7 @@ const envSchema = z.object({
   // Runtime variables (from .env.* files)
   EXPO_PUBLIC_API_URL: z.string().url('EXPO_PUBLIC_API_URL must be a valid URL'),
   EXPO_PUBLIC_SOCKET_URL: z.string().url('EXPO_PUBLIC_SOCKET_URL must be a valid URL'),
+  EXPO_PUBLIC_WEBVIEW_URL: z.string().url('EXPO_PUBLIC_WEBVIEW_URL must be a valid URL'),
 });
 
 // ─────────────────────────────────────────────────────────────
@@ -85,6 +86,7 @@ const _env: z.infer<typeof envSchema> = {
   EXPO_PUBLIC_VERSION: packageJSON.version,
   EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL ?? '',
   EXPO_PUBLIC_SOCKET_URL: process.env.EXPO_PUBLIC_SOCKET_URL ?? '',
+  EXPO_PUBLIC_WEBVIEW_URL: process.env.EXPO_PUBLIC_WEBVIEW_URL ?? '',
 };
 
 // ─────────────────────────────────────────────────────────────

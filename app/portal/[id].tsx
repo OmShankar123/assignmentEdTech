@@ -1,18 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
+import Env from '@env';
 import Header from '@/components/Header';
 import Typography from '@/components/Typography';
+import { getAccessToken } from '@/storage/token';
 import { Colors } from '@/theme/colors';
 
 export default function WebPortal() {
   const { id, title } = useLocalSearchParams<{ id: string; title: string }>();
   const router = useRouter();
   const { t } = useTranslation();
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    getAccessToken().then(setToken);
+  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -55,7 +63,13 @@ export default function WebPortal() {
             <ActivityIndicator color={Colors.primary} size="large" />
           </View>
         )}
-        source={{ uri: `https://freeapi.app/course-demo/${id}` }}
+        source={{
+          uri: `${Env.EXPO_PUBLIC_WEBVIEW_URL}/${id}`,
+          headers: {
+            Authorization: token ? `Bearer ${token}` : '',
+            'X-App-Platform': 'iOS',
+          },
+        }}
         startInLoadingState={true}
       />
     </SafeAreaView>

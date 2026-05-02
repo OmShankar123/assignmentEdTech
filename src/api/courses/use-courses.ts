@@ -50,6 +50,8 @@ export const useCourses = createInfiniteQuery<CoursesResponse, UseCoursesParams,
         _id: String(item.id),
       },
       stock: item.stock || 50,
+      // Add mock progress for assignment requirement (0 to 1)
+      progress: Math.random() > 0.5 ? Math.random() : 0,
       // Attach an instructor from the random users list if available
       instructor: instructors?.length > 0 ? instructors[index % instructors.length] : undefined,
     }));

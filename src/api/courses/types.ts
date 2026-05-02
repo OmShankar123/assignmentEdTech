@@ -43,6 +43,7 @@ export interface Course {
   }[];
   stock: number;
   instructor?: Instructor;
+  progress?: number;
 }
 
 export interface CoursesResponse {
