@@ -1,5 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
+
 import { TabBarIcon } from '@/components/TabBarIcon';
 
 export default function TabsLayout() {
@@ -10,7 +11,7 @@ export default function TabsLayout() {
         options={{
           title: 'Courses',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name="home" color={color} focused={focused} />
+            <TabBarIcon color={color} focused={focused} name="home" />
           ),
         }}
       />
@@ -19,7 +20,7 @@ export default function TabsLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name="settings" color={color} focused={focused} />
+            <TabBarIcon color={color} focused={focused} name="settings" />
           ),
         }}
       />

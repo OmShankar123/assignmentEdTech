@@ -45,15 +45,13 @@ type AppEnvironment = z.infer<typeof envSchema>['EXPO_PUBLIC_APP_ENV'];
 const EXPO_PUBLIC_APP_ENV = (process.env.EXPO_PUBLIC_APP_ENV ?? 'development') as AppEnvironment;
 
 const APP_NAMES: Record<AppEnvironment, string> = {
-  development: 'ExpoTemplate (Dev)',
-  staging: 'ExpoTemplate (Staging)',
-  production: 'ExpoTemplate',
+  development: 'MiniLMS (Dev)',
+  staging: 'MiniLMS (Staging)',
+  production: 'MiniLMS',
 };
 
 // Single package name shared across all environments.
-// Keeps third-party service setup (Firebase, push notifications, signing) unified —
-// one google-services.json / GoogleService-Info.plist works for every build.
-const PACKAGE_NAME = 'com.expo.template';
+const PACKAGE_NAME = 'com.omsinghania.minilms';
 
 // ─── MULTI-PACKAGE ALTERNATIVE ────────────────────────────────────────────────
 // Uncomment the block below (and remove the line above) if you need a distinct

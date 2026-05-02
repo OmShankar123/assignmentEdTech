@@ -1,6 +1,8 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ImageBackground, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { IMAGES } from '@/assets';
 import FullscreenLoader from '@/components/FullScreenLoader';
 
 interface ScreenWrapperProps {
@@ -8,6 +10,7 @@ interface ScreenWrapperProps {
   className?: string;
   showLoader?: boolean;
   scrollable?: boolean;
+  showBackground?: boolean;
 }
 
 const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
@@ -15,6 +18,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   className = '',
   showLoader = false,
   scrollable = false,
+  showBackground = true,
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -23,24 +27,44 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
     paddingTop: insets.top,
   };
 
-  if (scrollable) {
-    return (
-      <View className="flex-1 bg-white">
+  const content = (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      className="flex-1"
+    >
+      {scrollable ? (
         <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          style={containerStyle}
           className={className}
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
         >
           {children}
         </ScrollView>
-        <FullscreenLoader visible={showLoader} />
+      ) : (
+        <View className={`flex-1 ${className}`}>{children}</View>
+      )}
+    </KeyboardAvoidingView>
+  );
+
+  if (showBackground) {
+    return (
+      <View className="flex-1 bg-white">
+        <ImageBackground
+          className="flex-1"
+          resizeMode="cover"
+          source={IMAGES.background}
+          style={containerStyle}
+        >
+          {content}
+          <FullscreenLoader visible={showLoader} />
+        </ImageBackground>
       </View>
     );
   }
 
   return (
     <View className="flex-1 bg-white" style={containerStyle}>
-      <View className={`flex-1 ${className}`}>{children}</View>
+      {content}
       <FullscreenLoader visible={showLoader} />
     </View>
   );

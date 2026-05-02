@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import RNRestart from 'react-native-restart';
+
 import Button from '@/components/Button';
 
 interface ErrorFallbackProps {
@@ -27,10 +28,10 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, resetError }) => {
           {error.toString()}
         </Text>
         <Button
+          className="w-full"
           testID="try-again-button"
           title="Try Again"
           onPress={handleRestart}
-          className="w-full"
         />
       </View>
     </View>

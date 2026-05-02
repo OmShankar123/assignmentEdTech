@@ -1,9 +1,10 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { useRouter } from 'expo-router';
+import { z } from 'zod';
 
 import Button from '@/components/Button';
 import { ControlledTextField } from '@/components/ControlledTextField';
@@ -29,39 +30,52 @@ export default function Register() {
   };
 
   return (
-    <ScreenWrapper className="flex-1 p-5 justify-center">
-      <Text className="text-3xl font-bold mb-5 text-center">Register</Text>
-      
-      <View className="w-full mb-5">
-        <ControlledTextField<RegisterFormData>
-          control={control}
-          name="name"
-          placeholder="Full Name"
-          className="mb-4"
-        />
-        <ControlledTextField<RegisterFormData>
-          control={control}
-          name="email"
-          placeholder="Email"
-          className="mb-4"
-        />
-        <ControlledTextField<RegisterFormData>
-          control={control}
-          name="password"
-          placeholder="Password"
-          secureTextEntry
-          className="mb-4"
-        />
+    <ScreenWrapper className="flex-1 px-6 justify-center">
+      <Animated.View entering={FadeInDown.duration(800)}>
+        <Text className="text-4xl font-sans-bold text-black mb-2">Create Account</Text>
+        <Text className="text-base font-sans-regular text-secondary mb-10">
+          Join us and start your learning journey today.
+        </Text>
+      </Animated.View>
+
+      <View className="w-full">
+        <Animated.View entering={FadeInDown.delay(200).duration(800)}>
+          <ControlledTextField<RegisterFormData>
+            control={control}
+            label="Full Name"
+            name="name"
+            placeholder="e.g. John Doe"
+          />
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay(400).duration(800)}>
+          <ControlledTextField<RegisterFormData>
+            control={control}
+            label="Email Address"
+            name="email"
+            placeholder="e.g. hello@example.com"
+          />
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay(600).duration(800)}>
+          <ControlledTextField<RegisterFormData>
+            secureTextEntry
+            control={control}
+            label="Password"
+            name="password"
+            placeholder="********"
+          />
+        </Animated.View>
       </View>
 
-      <Button title="Create Account" onPress={handleSubmit(onSubmit)} className="w-full" />
-      
-      <Button 
-        title="Back to Login" 
-        type="outline" 
-        onPress={() => router.back()} 
-        className="mt-4 w-full" 
-      />
+      <Animated.View className="mt-4" entering={FadeInDown.delay(800).duration(800)}>
+        <Button className="shadow-lg" title="Create Account" onPress={handleSubmit(onSubmit)} />
+
+        <TouchableOpacity className="mt-6 flex-row justify-center" onPress={() => router.back()}>
+          <Text className="text-secondary font-sans-regular">Already have an account? </Text>
+          <Text className="text-primary font-sans-bold">Sign In</Text>
+        </TouchableOpacity>
+      </Animated.View>
     </ScreenWrapper>
   );
 }

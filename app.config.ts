@@ -7,14 +7,14 @@ import Env from './env';
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: Env.EXPO_PUBLIC_NAME,
-  slug: 'ExpoTemplate',
-  scheme: 'expotemplate',
+  slug: 'minilms',
+  scheme: 'minilms',
   experiments: {
     reactCompiler: true,
   },
   version: Env.EXPO_PUBLIC_VERSION,
   orientation: 'portrait',
-  icon: './assets/icon.png',
+  icon: './src/assets/icon.png',
   userInterfaceStyle: 'light',
   assetBundlePatterns: ['**/*'],
   ios: {
@@ -23,14 +23,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: './assets/icon.png',
-      backgroundColor: '#232323',
+      foregroundImage: './src/assets/adaptive-icon.png',
+      backgroundColor: '#ffffff',
     },
     edgeToEdgeEnabled: true,
     package: Env.EXPO_PUBLIC_PACKAGE_NAME,
   },
   web: {
-    favicon: './assets/favicon.png',
+    favicon: './src/assets/favicon.png',
   },
   plugins: [
     'expo-localization',
@@ -40,9 +40,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-splash-screen',
       {
-        backgroundColor: '#232323',
-        image: './assets/icon.png',
-        imageWidth: 200,
+        backgroundColor: '#ffffff',
+        image: './src/assets/splash.png',
+        imageWidth: 300,
+        resizeMode: 'contain',
       },
     ],
     [

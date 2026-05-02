@@ -1,11 +1,5 @@
 import React, { type FC, type ReactNode } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  type PressableProps,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Pressable, type PressableProps, Text, View } from 'react-native';
 
 type ButtonTypes = 'primary' | 'secondary' | 'outline' | 'disabled';
 
@@ -33,34 +27,34 @@ const Button: FC<ButtonProps> = ({
 }) => {
   const isButtonDisabled = disabled || isLoading || type === 'disabled';
 
-  const baseStyles = "w-full rounded-3xl items-center justify-center py-4 mb-6";
-  
+  const baseStyles = 'w-full h-14 rounded-xl items-center justify-center mb-4';
+
   const typeStyles = {
-    primary: "bg-black",
-    secondary: "bg-gray-200",
-    outline: "bg-transparent border border-black",
-    disabled: "bg-gray-400",
+    primary: 'bg-primary shadow-sm',
+    secondary: 'bg-secondary',
+    outline: 'bg-transparent border border-primary',
+    disabled: 'bg-gray-300',
   };
 
   const textStyles = {
-    primary: "text-white",
-    secondary: "text-black",
-    outline: "text-black",
-    disabled: "text-gray-200",
+    primary: 'text-white font-sans-bold',
+    secondary: 'text-white font-sans-bold',
+    outline: 'text-primary font-sans-bold',
+    disabled: 'text-gray-500 font-sans-bold',
   };
 
   return (
     <Pressable
+      className={`${baseStyles} ${typeStyles[type]} ${isButtonDisabled ? 'opacity-50' : 'active:opacity-80'} ${className}`}
       disabled={isButtonDisabled}
-      className={`${baseStyles} ${typeStyles[type]} ${isButtonDisabled ? 'opacity-50' : 'active:opacity-70'} ${className}`}
       {...rest}
     >
       {isLoading ? (
-        <ActivityIndicator color={type === 'primary' ? "#ffffff" : "#000000"} size="small" />
+        <ActivityIndicator color={type === 'primary' ? '#ffffff' : '#0a7ea4'} size="small" />
       ) : (
         <View className="flex-row items-center justify-center">
           {leftIcon && <View className="mx-2">{leftIcon}</View>}
-          <Text className={`text-base font-semibold text-center ${textStyles[type]} ${textClassName}`}>
+          <Text className={`text-base text-center ${textStyles[type]} ${textClassName}`}>
             {title}
           </Text>
           {rightIcon && <View className="mx-2">{rightIcon}</View>}

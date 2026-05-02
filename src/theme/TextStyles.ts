@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
+
 import { ms } from '@/utils';
+
 import { fonts } from './fonts';
 
 export const TextStyles = StyleSheet.create({
