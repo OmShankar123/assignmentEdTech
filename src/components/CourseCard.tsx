@@ -6,6 +6,7 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 
 import type { Course } from '@/api/courses/types';
+import { useBookmarkStore } from '@/store';
 import { Colors } from '@/theme/colors';
 
 import Typography from './Typography';
@@ -17,6 +18,8 @@ interface CourseCardProps {
 const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   const router = useRouter();
   const { t } = useTranslation();
+  const { toggleBookmark, bookmarkedIds } = useBookmarkStore();
+  const isBookmarked = bookmarkedIds.includes(course._id);
 
   const handlePress = () => {
     router.push({
@@ -52,8 +55,18 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         </View>
 
         {/* Floating Bookmark */}
-        <TouchableOpacity className="absolute top-4 right-4 w-10 h-10 bg-white/90 rounded-full items-center justify-center">
-          <Feather color={Colors.primary} name="bookmark" size={18} />
+        <TouchableOpacity
+          className="absolute top-4 right-4 w-10 h-10 bg-white/90 rounded-full items-center justify-center"
+          onPress={(e) => {
+            e.stopPropagation();
+            toggleBookmark(course._id);
+          }}
+        >
+          <Feather
+            color={isBookmarked ? Colors.primary : Colors.secondary}
+            name={isBookmarked ? 'bookmark' : 'bookmark'}
+            size={18}
+          />
         </TouchableOpacity>
 
         {/* Rating Badge */}

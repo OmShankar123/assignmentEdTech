@@ -17,6 +17,7 @@ import type { Course } from '@/api/courses/types';
 import { useCourseDetails } from '@/api/courses/use-course-details';
 import Button from '@/components/Button';
 import Typography from '@/components/Typography';
+import { useBookmarkStore } from '@/store';
 import { Colors } from '@/theme/colors';
 
 export default function CourseDetail() {
@@ -24,6 +25,8 @@ export default function CourseDetail() {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { toggleBookmark, bookmarkedIds } = useBookmarkStore();
+  const isBookmarked = id ? bookmarkedIds.includes(id) : false;
 
   const { data: response, isLoading } = useCourseDetails({
     variables: { id: id! },
@@ -83,8 +86,15 @@ export default function CourseDetail() {
             <Feather color="black" name="arrow-left" size={20} />
           </TouchableOpacity>
 
-          <TouchableOpacity className="w-10 h-10 bg-white/90 rounded-full justify-center items-center shadow-sm">
-            <Ionicons color={Colors.error} name="heart-outline" size={20} />
+          <TouchableOpacity
+            className="w-10 h-10 bg-white/90 rounded-full justify-center items-center shadow-sm"
+            onPress={() => toggleBookmark(course._id)}
+          >
+            <Ionicons
+              color={Colors.error}
+              name={isBookmarked ? 'heart' : 'heart-outline'}
+              size={20}
+            />
           </TouchableOpacity>
         </View>
 
