@@ -64,7 +64,7 @@ export default function Register() {
                 control={control}
                 label={t('auth.username')}
                 name="username"
-                placeholder="e.g. johndoe"
+                placeholder={t('auth.username_placeholder')}
               />
             </Animated.View>
 
@@ -75,7 +75,7 @@ export default function Register() {
                 keyboardType="email-address"
                 label={t('auth.email')}
                 name="email"
-                placeholder="e.g. hello@example.com"
+                placeholder={t('auth.email_placeholder')}
               />
             </Animated.View>
 

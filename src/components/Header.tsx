@@ -12,6 +12,7 @@ interface HeaderProps {
   showBackButton?: boolean;
   backButtonText?: string;
   leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -20,6 +21,7 @@ const Header: React.FC<HeaderProps> = ({
   showBackButton = true,
   backButtonText,
   leftIcon,
+  rightIcon,
 }) => {
   const router = useRouter();
 
@@ -33,32 +35,35 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <View className="bg-transparent z-10">
-      <View className="h-12 flex-row items-center">
-        {leftIcon ? (
-          <View className="justify-center items-center mr-2">{leftIcon}</View>
-        ) : (
-          showBackButton && (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              className="flex-row items-center justify-center bg-gray-100 w-10 h-10 rounded-xl"
-              onPress={handleBackPress}
-            >
-              <Feather color="#000000" name="arrow-left" size={20} />
-              {backButtonText && (
-                <Typography className="ml-1 text-black" variant="bodySemiBold">
-                  {backButtonText}
-                </Typography>
-              )}
-            </TouchableOpacity>
-          )
-        )}
-        {title && (
-          <View className="justify-center ml-3">
-            <Typography className="text-black" variant="h3">
-              {title}
-            </Typography>
-          </View>
-        )}
+      <View className="h-12 flex-row items-center justify-between">
+        <View className="flex-row items-center flex-1">
+          {leftIcon ? (
+            <View className="justify-center items-center mr-2">{leftIcon}</View>
+          ) : (
+            showBackButton && (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                className="flex-row items-center justify-center bg-gray-100 w-10 h-10 rounded-xl"
+                onPress={handleBackPress}
+              >
+                <Feather color="#000000" name="arrow-left" size={20} />
+                {backButtonText && (
+                  <Typography className="ml-1 text-black" variant="bodySemiBold">
+                    {backButtonText}
+                  </Typography>
+                )}
+              </TouchableOpacity>
+            )
+          )}
+          {title && (
+            <View className="justify-center ml-3">
+              <Typography className="text-black" variant="h3">
+                {title}
+              </Typography>
+            </View>
+          )}
+        </View>
+        {rightIcon && <View className="justify-center items-end">{rightIcon}</View>}
       </View>
     </View>
   );

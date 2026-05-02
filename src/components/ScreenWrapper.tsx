@@ -12,6 +12,7 @@ interface ScreenWrapperProps {
   scrollable?: boolean;
   showBackgroundShape?: boolean;
   contentPadding?: boolean;
+  excludeTopInset?: boolean;
 }
 
 const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
@@ -21,12 +22,13 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   scrollable = false,
   showBackgroundShape = true,
   contentPadding = true,
+  excludeTopInset = false,
 }) => {
   const insets = useSafeAreaInsets();
 
   const containerStyle = {
-    paddingBottom: insets.bottom,
-    paddingTop: insets.top,
+    // paddingBottom: insets.bottom,
+    paddingTop: excludeTopInset ? 0 : insets.top,
   };
 
   const content = (

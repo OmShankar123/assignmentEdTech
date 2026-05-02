@@ -68,7 +68,7 @@ export default function Login() {
                 control={control}
                 label={t('auth.username')}
                 name="username"
-                placeholder="e.g. johndoe"
+                placeholder={t('auth.username_placeholder')}
               />
             </Animated.View>
 

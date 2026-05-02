@@ -13,4 +13,6 @@ export const Colors = {
   gray200: '#e5e7eb',
   placeholder: '#9ca3af',
   iconSecondary: '#6b7280',
+  primaryLight: '#eff6ff',
+  successLight: '#f0fdf4',
 };
