@@ -9,6 +9,10 @@ import {
   View,
 } from 'react-native';
 
+import { Colors } from '@/theme/colors';
+
+import Typography from './Typography';
+
 interface TextFieldProps extends TextInputProps {
   label?: string;
   placeholder?: string;
@@ -49,7 +53,9 @@ const TextField = forwardRef<TextInput, TextFieldProps>(
     return (
       <View className="w-full mb-4">
         {label && (
-          <Text className="text-sm font-sans-semibold text-secondary mb-2 ml-1">{label}</Text>
+          <Typography className="text-secondary mb-2 ml-1" variant="bodySmallSemiBold">
+            {label}
+          </Typography>
         )}
         <View className={containerStyles}>
           {icon && <Image className="w-5 h-5 mr-3" resizeMode="contain" source={icon} />}
@@ -59,7 +65,7 @@ const TextField = forwardRef<TextInput, TextFieldProps>(
             autoCorrect={false}
             className="flex-1 h-10 text-black text-base font-sans-regular"
             placeholder={placeholder}
-            placeholderTextColor="#9ca3af"
+            placeholderTextColor={Colors.textSecondary}
             underlineColorAndroid="transparent"
             onBlur={(e) => {
               setIsFocused(false);

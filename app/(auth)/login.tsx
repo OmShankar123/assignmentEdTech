@@ -17,6 +17,7 @@ import ScreenWrapper from '@/components/ScreenWrapper';
 import Typography from '@/components/Typography';
 import { setTokens } from '@/storage/token';
 import { useUserStore } from '@/store/useUserStore';
+import { Colors } from '@/theme/colors';
 
 export default function Login() {
   const { t } = useTranslation();
@@ -79,7 +80,7 @@ export default function Login() {
                 placeholder="********"
                 rightIcon={
                   <Ionicons
-                    color="#6b7280"
+                    color={Colors.textSecondary}
                     name={isPasswordVisible ? 'eye-off' : 'eye'}
                     size={20}
                   />

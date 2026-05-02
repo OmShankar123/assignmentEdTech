@@ -2,6 +2,12 @@
   "common": {
     "or": "Or",
     "welcome": "Welcome",
+    "explore": "Explore",
+    "search_placeholder": "Search for courses...",
+    "no_courses": "No courses found at the moment.",
+    "view_details": "View Details",
+    "profile": "Profile",
+    "logout": "Logout",
     "ok": "OK",
     "something_went_wrong": "Something went wrong",
     "network_error": "Network error. Please try again."
