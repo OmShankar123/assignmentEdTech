@@ -13,7 +13,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     reactCompiler: true,
   },
   version: Env.EXPO_PUBLIC_VERSION,
-  orientation: 'portrait',
+  orientation: 'default',
   icon: './src/assets/icon.png',
   userInterfaceStyle: 'light',
   assetBundlePatterns: ['**/*'],
