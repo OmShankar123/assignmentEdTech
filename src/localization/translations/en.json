@@ -24,7 +24,9 @@
     "save": "Save",
     "edit": "Edit",
     "delete": "Delete",
-    "back": "Back"
+    "back": "Back",
+    "enrolled": "Enrolled",
+    "progress": "Progress"
   },
   "course": {
     "content": "Course Content",
@@ -60,13 +62,13 @@
     "register_success": "Account Created",
     "register_success_msg": "You can now sign in with your account.",
     "dont_have_account": "Don't have an account?",
-    "already_have_account": "Already have an account?"
+    "already_have_account": "Already have an account?",
+    "logout_confirmation": "Are you sure you want to logout?"
   },
   "courses": {
     "instructors": "Instructors",
     "about": "About this course",
     "curriculum": "Course Curriculum",
-    "enrolled": "Enrolled",
     "open_portal": "Open Portal",
     "enroll_now": "Enroll Now",
     "lessons": "Lessons",
@@ -76,6 +78,8 @@
     "engagement_title": "Keep Learning!",
     "engagement_body": "It's been a while since you explored new courses. Check out what's new!",
     "bookmark_milestone_title": "Course Collector!",
-    "bookmark_milestone_body": "You've bookmarked 5 or more courses. Why not start one today?"
+    "bookmark_milestone_body": "You've bookmarked 5 or more courses. Why not start one today?",
+    "profile_update_title": "Profile Updated",
+    "profile_update_body": "Your profile picture has been updated successfully!"
   }
 }

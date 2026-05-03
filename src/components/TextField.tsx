@@ -63,9 +63,10 @@ const TextField = forwardRef<TextInput, TextFieldProps>(
             ref={ref}
             autoComplete="off"
             autoCorrect={false}
-            className="flex-1 h-10 text-black text-base font-sans-regular"
+            className="flex-1 h-full text-black text-base font-sans-regular p-0"
             placeholder={placeholder}
             placeholderTextColor={Colors.textSecondary}
+            textAlignVertical="center"
             underlineColorAndroid="transparent"
             onBlur={(e) => {
               setIsFocused(false);

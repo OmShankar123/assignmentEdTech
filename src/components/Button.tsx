@@ -30,7 +30,7 @@ const Button: FC<ButtonProps> = ({
   const baseStyles = 'w-full h-14 rounded-xl items-center justify-center mb-4';
 
   const typeStyles = {
-    primary: 'bg-primary shadow-sm',
+    primary: 'bg-primary',
     secondary: 'bg-secondary',
     outline: 'bg-transparent border border-primary',
     disabled: 'bg-gray-300',

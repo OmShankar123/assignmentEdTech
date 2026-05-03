@@ -304,58 +304,65 @@ client.interceptors.response.use(
     //   → Attempt refresh → Retry request → Logout on failure
     //
     if (status === 401 && originalRequest) {
-      // Path A: No refresh token support — logout gracefully
-      if (!ENABLE_TOKEN_REFRESH) {
-        forceLogout();
-        return Promise.reject(error);
-      }
+      // If we are currently logging in, a 401 means "Invalid credentials",
+      // NOT session expiry. We should skip forceLogout and let the
+      // normal error handling display the server message.
+      const isLoginRequest = originalRequest.url?.includes('/users/login');
 
-      // Path B: Attempt token refresh with request queuing
-      const retryCount = originalRequest._retryCount ?? 0;
+      if (!isLoginRequest) {
+        // Path A: No refresh token support — logout gracefully
+        if (!ENABLE_TOKEN_REFRESH) {
+          forceLogout();
+          return Promise.reject(error);
+        }
 
-      // Safety check: if we've already retried the maximum number
-      // of times, the refresh token itself is likely invalid.
-      // Stop retrying and force logout.
-      if (retryCount >= MAX_RETRIES) {
-        forceLogout();
-        return Promise.reject(error);
-      }
+        // Path B: Attempt token refresh with request queuing
+        const retryCount = originalRequest._retryCount ?? 0;
 
-      // If a refresh is already in progress (triggered by another
-      // request), don't start a second one. Instead, queue this
-      // request and wait for the ongoing refresh to finish.
-      if (isRefreshing) {
-        return new Promise<string>((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((newToken) => {
-            originalRequest.headers.set('Authorization', `Bearer ${newToken}`);
-            originalRequest._retryCount = retryCount + 1;
-            return client(originalRequest);
+        // Safety check: if we've already retried the maximum number
+        // of times, the refresh token itself is likely invalid.
+        // Stop retrying and force logout.
+        if (retryCount >= MAX_RETRIES) {
+          forceLogout();
+          return Promise.reject(error);
+        }
+
+        // If a refresh is already in progress (triggered by another
+        // request), don't start a second one. Instead, queue this
+        // request and wait for the ongoing refresh to finish.
+        if (isRefreshing) {
+          return new Promise<string>((resolve, reject) => {
+            failedQueue.push({ resolve, reject });
           })
-          .catch((err) => Promise.reject(err));
-      }
+            .then((newToken) => {
+              originalRequest.headers.set('Authorization', `Bearer ${newToken}`);
+              originalRequest._retryCount = retryCount + 1;
+              return client(originalRequest);
+            })
+            .catch((err) => Promise.reject(err));
+        }
 
-      // This is the first 401 — start the refresh process
-      isRefreshing = true;
+        // This is the first 401 — start the refresh process
+        isRefreshing = true;
 
-      try {
-        const newToken = await refreshToken();
+        try {
+          const newToken = await refreshToken();
 
-        // Refresh succeeded — resolve all queued requests
-        processQueue(null, newToken);
+          // Refresh succeeded — resolve all queued requests
+          processQueue(null, newToken);
 
-        // Retry the original request with the new token
-        originalRequest.headers.set('Authorization', `Bearer ${newToken}`);
-        originalRequest._retryCount = retryCount + 1;
-        return client(originalRequest);
-      } catch (refreshError) {
-        // Refresh failed — reject all queued requests and logout
-        processQueue(refreshError as Error);
-        forceLogout();
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
+          // Retry the original request with the new token
+          originalRequest.headers.set('Authorization', `Bearer ${newToken}`);
+          originalRequest._retryCount = retryCount + 1;
+          return client(originalRequest);
+        } catch (refreshError) {
+          // Refresh failed — reject all queued requests and logout
+          processQueue(refreshError as Error);
+          forceLogout();
+          return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
+        }
       }
     }
 

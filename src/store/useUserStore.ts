@@ -9,6 +9,7 @@ interface UserState {
   user: User | null;
   login: (user: User) => void;
   logout: () => Promise<void>;
+  updateAvatar: (avatar: { url: string; localPath: string }) => void;
 }
 
 export const useUserStore = createPersistedStore<UserState>('user-storage', (set) => ({
@@ -17,6 +18,12 @@ export const useUserStore = createPersistedStore<UserState>('user-storage', (set
 
   login: (user: User) => {
     set({ isLoggedIn: true, user });
+  },
+
+  updateAvatar: (avatar: { url: string; localPath: string }) => {
+    set((state) => ({
+      user: state.user ? { ...state.user, avatar } : null,
+    }));
   },
 
   logout: async () => {

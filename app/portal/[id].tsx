@@ -1,26 +1,109 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Platform, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
-import Env from '@env';
+import { useCourseDetails } from '@/api/courses/use-course-details';
 import Header from '@/components/Header';
 import Typography from '@/components/Typography';
-import { getAccessToken } from '@/storage/token';
+import { useUserStore } from '@/store/useUserStore';
 import { Colors } from '@/theme/colors';
 
 export default function WebPortal() {
-  const { id, title } = useLocalSearchParams<{ id: string; title: string }>();
+  const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { t } = useTranslation();
-  const [token, setToken] = useState<string | null>(null);
+  const { user } = useUserStore();
+  const { data: response, isLoading } = useCourseDetails({ variables: { id: id! } });
+  const course = response?.data;
 
-  useEffect(() => {
-    getAccessToken().then(setToken);
-  }, []);
+  const localHtmlTemplate = useMemo(() => {
+    if (!course) return '';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <style>
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 20px;
+            color: #1A1A1A;
+            line-height: 1.6;
+            background-color: #f8fafc;
+          }
+          .card {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 20px;
+          }
+          .title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: ${Colors.primary};
+          }
+          .instructor {
+            color: ${Colors.secondary};
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+          }
+          .description {
+            font-size: 16px;
+            color: #4B5563;
+          }
+          .badge {
+            display: inline-block;
+            background: ${Colors.primary}20;
+            color: ${Colors.primary};
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+          }
+          .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 12px;
+            color: #9CA3AF;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <div class="badge">${course.category.toUpperCase()}</div>
+          <div class="title">${course.name}</div>
+          <div class="instructor">By ${course.instructor?.name?.first || 'Expert Instructor'}</div>
+          <div class="description">${course.description}</div>
+        </div>
+        <div class="card">
+          <div class="title" style="font-size: 18px">Course Content</div>
+          <p>Welcome to the learning portal, <b>${user?.username || 'Student'}</b>! This content is being served from a local HTML template with native communication enabled via headers.</p>
+        </div>
+        <div class="footer">
+          &copy; 2026 MiniLMS Learning System
+        </div>
+      </body>
+      </html>
+    `;
+  }, [course, user]);
+
+  if (isLoading || !course) {
+    return (
+      <SafeAreaView className="flex-1 bg-white justify-center items-center">
+        <ActivityIndicator color={Colors.primary} size="large" />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -32,13 +115,14 @@ export default function WebPortal() {
             </TouchableOpacity>
           }
           showBackButton={true}
-          title={title || String(t('course.content'))}
+          title={course.name}
           onBackPress={() => router.back()}
         />
       </View>
 
       <WebView
         className="flex-1"
+        originWhitelist={['*']}
         renderError={(errorName) => (
           <View className="flex-1 justify-center items-center px-10 bg-white">
             <Ionicons color={Colors.secondary} name="cloud-offline-outline" size={64} />
@@ -58,16 +142,12 @@ export default function WebPortal() {
             </TouchableOpacity>
           </View>
         )}
-        renderLoading={() => (
-          <View className="absolute inset-0 justify-center items-center bg-white">
-            <ActivityIndicator color={Colors.primary} size="large" />
-          </View>
-        )}
         source={{
-          uri: `${Env.EXPO_PUBLIC_WEBVIEW_URL}/${id}`,
+          html: localHtmlTemplate,
           headers: {
-            Authorization: token ? `Bearer ${token}` : '',
-            'X-App-Platform': 'iOS',
+            'X-Course-Id': id,
+            'X-User-Role': user?.role || 'student',
+            'X-App-Platform': Platform.OS === 'ios' ? 'iOS' : 'Android',
           },
         }}
         startInLoadingState={true}

@@ -54,6 +54,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         },
       },
     ],
+    [
+      'expo-image-picker',
+      {
+        photosPermission: 'Allow MiniLMS to access your photos to update your profile picture.',
+      },
+    ],
     ['./plugins/withIosDeploymentTarget.js', { deploymentTarget: '16.0' }],
   ],
 });

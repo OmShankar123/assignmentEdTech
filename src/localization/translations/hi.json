@@ -24,7 +24,9 @@
     "save": "सहेजें",
     "edit": "संपादित करें",
     "delete": "हटाएं",
-    "back": "पीछे"
+    "back": "पीछे",
+    "enrolled": "नामांकित",
+    "progress": "प्रगति"
   },
   "course": {
     "content": "पाठ्यक्रम सामग्री",
@@ -60,13 +62,13 @@
     "register_success": "खाता बनाया गया",
     "register_success_msg": "अब आप अपने खाते से साइन इन कर सकते हैं।",
     "dont_have_account": "खाता नहीं है?",
-    "already_have_account": "पहले से ही एक खाता है?"
+    "already_have_account": "पहले से ही एक खाता है?",
+    "logout_confirmation": "क्या आप वाकई लॉगआउट करना चाहते हैं?"
   },
   "courses": {
     "instructors": "प्रशिक्षक",
     "about": "इस पाठ्यक्रम के बारे में",
     "curriculum": "पाठ्यक्रम पाठ्यचर्या",
-    "enrolled": "नामांकित",
     "open_portal": "पोर्टल खोलें",
     "enroll_now": "अभी नामांकन करें",
     "lessons": "पाठ",
@@ -76,6 +78,8 @@
     "engagement_title": "सीखते रहें!",
     "engagement_body": "नए पाठ्यक्रमों की खोज किए हुए काफी समय हो गया है। देखें कि नया क्या है!",
     "bookmark_milestone_title": "कोर्स कलेक्टर!",
-    "bookmark_milestone_body": "आपने 5 या अधिक पाठ्यक्रम बुकमार्क किए हैं। आज एक क्यों नहीं शुरू करते?"
+    "bookmark_milestone_body": "आपने 5 या अधिक पाठ्यक्रम बुकमार्क किए हैं। आज एक क्यों नहीं शुरू करते?",
+    "profile_update_title": "प्रोफ़ाइल अपडेट की गई",
+    "profile_update_body": "आपकी प्रोफ़ाइल तस्वीर सफलतापूर्वक अपडेट कर दी गई है!"
   }
 }

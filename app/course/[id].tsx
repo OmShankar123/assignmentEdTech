@@ -81,14 +81,14 @@ export default function CourseDetail() {
           style={{ paddingTop: insets.top + 12 }}
         >
           <TouchableOpacity
-            className="w-10 h-10 bg-white/90 rounded-full justify-center items-center shadow-sm"
+            className="w-10 h-10 bg-white/90 rounded-full justify-center items-center border border-gray100"
             onPress={() => router.back()}
           >
             <Feather color={Colors.text} name="arrow-left" size={20} />
           </TouchableOpacity>
 
           <TouchableOpacity
-            className="w-10 h-10 bg-white/90 rounded-full justify-center items-center shadow-sm"
+            className="w-10 h-10 bg-white/90 rounded-full justify-center items-center border border-gray100"
             onPress={() => course && toggleBookmark(course)}
           >
             <Ionicons
@@ -164,7 +164,7 @@ export default function CourseDetail() {
                     style={{ width: '100%', height: '100%', borderRadius: 16 }}
                     transition={300}
                   />
-                  <View className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
+                  <View className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 border border-gray100">
                     <Ionicons color={Colors.success} name="checkmark-circle" size={18} />
                   </View>
                 </View>
@@ -184,7 +184,7 @@ export default function CourseDetail() {
                   </Typography>
                 </View>
 
-                <TouchableOpacity className="bg-white w-10 h-10 rounded-full items-center justify-center shadow-sm border border-gray100">
+                <TouchableOpacity className="bg-white w-10 h-10 rounded-full items-center justify-center border border-gray100">
                   <Feather color={Colors.primary} name="mail" size={18} />
                 </TouchableOpacity>
               </Animated.View>
@@ -195,7 +195,7 @@ export default function CourseDetail() {
               className="flex-row justify-between mb-8"
               entering={FadeInUp.delay(500).duration(600)}
             >
-              <View className="w-[48%] bg-white border border-gray100 p-4 rounded-2xl shadow-sm">
+              <View className="w-[48%] bg-white border border-gray100 p-4 rounded-2xl">
                 <View className="w-10 h-10 bg-primaryLight rounded-xl items-center justify-center mb-3">
                   <Feather color={Colors.primary} name="clock" size={20} />
                 </View>
@@ -206,7 +206,7 @@ export default function CourseDetail() {
                   12 Hours
                 </Typography>
               </View>
-              <View className="w-[48%] bg-white border border-gray100 p-4 rounded-2xl shadow-sm">
+              <View className="w-[48%] bg-white border border-gray100 p-4 rounded-2xl">
                 <View className="w-10 h-10 bg-successLight rounded-xl items-center justify-center mb-3">
                   <Feather color={Colors.success} name="users" size={20} />
                 </View>

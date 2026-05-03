@@ -2,13 +2,14 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tabs } from 'expo-router';
 
+import { CustomTabBar } from '@/components/CustomTabBar';
 import { TabBarIcon } from '@/components/TabBarIcon';
 
 export default function TabsLayout() {
   const { t } = useTranslation();
 
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
+    <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <CustomTabBar {...props} />}>
       <Tabs.Screen
         name="index"
         options={{

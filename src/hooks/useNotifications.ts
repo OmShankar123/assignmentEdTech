@@ -79,9 +79,28 @@ export function useNotifications() {
     await Notifications.cancelAllScheduledNotificationsAsync();
   };
 
+  /**
+   * Sends an immediate local notification.
+   */
+  const sendLocalNotification = async (
+    title: string,
+    body: string,
+    data?: Record<string, unknown>,
+  ) => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title,
+        body,
+        data: data || {},
+      },
+      trigger: null, // null means immediate
+    });
+  };
+
   return {
     scheduleEngagementNotification,
     cancelAllNotifications,
+    sendLocalNotification,
   };
 }
 
@@ -113,12 +132,16 @@ async function registerForPushNotificationsAsync() {
     return;
   }
 
+  // NOTE: We only use Local Notifications for this assignment.
+  // getDevicePushTokenAsync() requires FCM configuration on Android which is not set up.
+  /*
   try {
     token = (await Notifications.getDevicePushTokenAsync()).data;
     console.log('Local Notification Token:', token);
   } catch (e) {
     console.warn('Error getting device token:', e);
   }
+  */
 
   return token;
 }
