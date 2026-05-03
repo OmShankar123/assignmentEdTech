@@ -26,7 +26,10 @@
     "delete": "हटाएं",
     "back": "पीछे",
     "enrolled": "नामांकित",
-    "progress": "प्रगति"
+    "progress": "प्रगति",
+    "email_app_missing": "इस डिवाइस पर कोई ईमेल ऐप नहीं मिला",
+    "settings": "सेटिंग्स",
+    "dark_mode": "डार्क मोड"
   },
   "course": {
     "content": "पाठ्यक्रम सामग्री",

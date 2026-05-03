@@ -16,12 +16,19 @@ export default function WebPortal() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { t } = useTranslation();
-  const { user } = useUserStore();
+  const { user, enrollCourse, enrolledCourses } = useUserStore();
   const { data: response, isLoading } = useCourseDetails({ variables: { id: id! } });
   const course = response?.data;
+  const isEnrolled = enrolledCourses.includes(id!);
 
   const localHtmlTemplate = useMemo(() => {
     if (!course) return '';
+
+    const bgColor = '#f8fafc';
+    const cardColor = 'white';
+    const textColor = '#1A1A1A';
+    const subTextColor = '#4B5563';
+    const borderColor = '#e2e8f0';
 
     return `
       <!DOCTYPE html>
@@ -32,16 +39,17 @@ export default function WebPortal() {
           body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             padding: 20px;
-            color: #1A1A1A;
+            color: ${textColor};
             line-height: 1.6;
-            background-color: #f8fafc;
+            background-color: ${bgColor};
           }
           .card {
-            background: white;
+            background: ${cardColor};
             padding: 24px;
             border-radius: 16px;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             margin-bottom: 20px;
+            border: 1px solid ${borderColor};
           }
           .title {
             font-size: 24px;
@@ -58,7 +66,7 @@ export default function WebPortal() {
           }
           .description {
             font-size: 16px;
-            color: #4B5563;
+            color: ${subTextColor};
           }
           .badge {
             display: inline-block;
@@ -69,6 +77,23 @@ export default function WebPortal() {
             font-size: 12px;
             font-weight: 700;
             margin-bottom: 8px;
+          }
+          .btn {
+            display: block;
+            width: 100%;
+            background: ${Colors.primary};
+            color: white;
+            text-align: center;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+          }
+          .btn:disabled {
+            background: #9CA3AF;
           }
           .footer {
             text-align: center;
@@ -82,20 +107,28 @@ export default function WebPortal() {
         <div class="card">
           <div class="badge">${course.category.toUpperCase()}</div>
           <div class="title">${course.name}</div>
-          <div class="instructor">By ${course.instructor?.name?.first || 'Expert Instructor'}</div>
+          <div class="instructor">${t('common.instructor')}: ${course.instructor?.name?.first || t('common.expert')}</div>
           <div class="description">${course.description}</div>
         </div>
         <div class="card">
-          <div class="title" style="font-size: 18px">Course Content</div>
-          <p>Welcome to the learning portal, <b>${user?.username || 'Student'}</b>! This content is being served from a local HTML template with native communication enabled via headers.</p>
+          <div class="title" style="font-size: 18px">${t('common.enrollment') || 'Enrollment'}</div>
+          <p>${t('portal.welcome_msg', { name: user?.username || t('common.student') })}</p>
+          <button id="enrollBtn" class="btn" onclick="enroll()" ${isEnrolled ? 'disabled' : ''}>
+            ${isEnrolled ? t('common.enrolled') : t('common.enroll_now')}
+          </button>
         </div>
         <div class="footer">
-          &copy; 2026 MiniLMS Learning System
+          &copy; 2026 MiniLMS
         </div>
+        <script>
+          function enroll() {
+            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'ENROLL', courseId: '${id}' }));
+          }
+        </script>
       </body>
       </html>
     `;
-  }, [course, user]);
+  }, [course, user, id, isEnrolled, t]);
 
   if (isLoading || !course) {
     return (
@@ -104,6 +137,17 @@ export default function WebPortal() {
       </SafeAreaView>
     );
   }
+
+  const handleMessage = (event: any) => {
+    try {
+      const data = JSON.parse(event.nativeEvent.data);
+      if (data.type === 'ENROLL') {
+        enrollCourse(data.courseId);
+      }
+    } catch (e) {
+      console.error('WebView Message Error:', e);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -151,6 +195,7 @@ export default function WebPortal() {
           },
         }}
         startInLoadingState={true}
+        onMessage={handleMessage}
       />
     </SafeAreaView>
   );

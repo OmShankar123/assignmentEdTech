@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, View } from 'react-native';
 import Animated, {
   interpolate,
   interpolateColor,
@@ -16,22 +16,21 @@ import { Colors } from '@/theme/colors';
 
 import Typography from './Typography';
 
-const TAB_BAR_HEIGHT = 64;
-const TAB_BAR_WIDTH_PERCENT = 90;
-
 export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
 
   return (
     <View
-      style={[
-        styles.container,
-        {
-          bottom: insets.bottom + 10,
-        },
-      ]}
+      className="absolute self-center w-[90%] h-16 bg-white rounded-[32px] shadow-lg z-50"
+      style={{
+        bottom: insets.bottom + 10,
+        ...Platform.select({
+          android: { elevation: 4 },
+          ios: { elevation: 10 },
+        }),
+      }}
     >
-      <View style={styles.content}>
+      <View className="flex-1 flex-row justify-around items-center px-2">
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
           const isFocused = state.index === index;
@@ -129,9 +128,12 @@ function TabItem({ isFocused, label, onPress, name }: TabItemProps) {
   };
 
   return (
-    <Animated.View style={[styles.tabItem, animatedTabItemStyle]}>
-      <Pressable style={styles.pressable} onPress={onPress}>
-        <Animated.View style={[styles.tabContent, animatedBackgroundStyle]}>
+    <Animated.View className="items-center justify-center h-full" style={[animatedTabItemStyle]}>
+      <Pressable className="w-full h-full items-center justify-center" onPress={onPress}>
+        <Animated.View
+          className="flex-row items-center justify-center h-10"
+          style={[animatedBackgroundStyle]}
+        >
           <Animated.View style={animatedIconStyle}>
             <Feather
               color={isFocused ? Colors.primary : Colors.secondary}
@@ -140,7 +142,7 @@ function TabItem({ isFocused, label, onPress, name }: TabItemProps) {
             />
           </Animated.View>
           {isFocused && (
-            <Animated.View style={[styles.labelContainer, animatedTextStyle]}>
+            <Animated.View className="overflow-hidden" style={[animatedTextStyle]}>
               <Typography
                 className="ml-2 text-primary"
                 numberOfLines={1}
@@ -155,57 +157,3 @@ function TabItem({ isFocused, label, onPress, name }: TabItemProps) {
     </Animated.View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    alignSelf: 'center',
-    width: `${TAB_BAR_WIDTH_PERCENT}%`,
-    height: TAB_BAR_HEIGHT,
-    backgroundColor: 'white',
-    borderRadius: 32,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    ...Platform.select({
-      android: {
-        elevation: 4,
-      },
-      ios: {
-        elevation: 10,
-      },
-    }),
-    zIndex: 100,
-  },
-  content: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-  },
-  tabItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-  },
-  pressable: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tabContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 40,
-  },
-  labelContainer: {
-    overflow: 'hidden',
-  },
-});

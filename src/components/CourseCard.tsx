@@ -36,11 +36,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.95}
-      className="bg-white rounded-[32px] overflow-hidden mb-8 border border-gray100 shadow-lg shadow-gray200"
+      className="bg-white border-gray100 rounded-[32px] overflow-hidden mb-8 border shadow-lg shadow-gray200"
       onPress={handlePress}
     >
       {/* Hero Section */}
-      <View className="w-full bg-gray100 relative" style={{ height: 220 }}>
+      <View className="w-full relative bg-gray100" style={{ height: 220 }}>
         <Image
           cachePolicy="memory-disk"
           contentFit="cover"
@@ -50,7 +50,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         />
 
         {/* Floating Category */}
-        <View className="absolute top-4 left-4 bg-white/90 px-3 py-1.5 rounded-xl">
+        <View className="absolute top-4 left-4 px-3 py-1.5 rounded-xl border bg-white/90 border-transparent">
           <Typography className="text-primary font-sans-bold uppercase" variant="caption">
             {t('common.course')}
           </Typography>
@@ -58,7 +58,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
 
         {/* Floating Bookmark */}
         <TouchableOpacity
-          className="absolute top-4 right-4 w-10 h-10 bg-white/90 rounded-full items-center justify-center"
+          className="absolute top-4 right-4 w-10 h-10 rounded-full items-center justify-center border bg-white/90 border-transparent"
           onPress={(e) => {
             e.stopPropagation();
             toggleBookmark(course);
@@ -84,7 +84,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         {/* Title & Price Row */}
         <View className="flex-row justify-between items-start mb-2">
           <View className="flex-1 mr-4">
-            <Typography className="text-black leading-7" numberOfLines={2} variant="h3">
+            <Typography className="leading-7" numberOfLines={2} variant="h3">
               {course.name}
             </Typography>
           </View>
@@ -94,21 +94,21 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         </View>
 
         {/* Description */}
-        <Typography className="text-gray-400 mb-4 leading-6" numberOfLines={2} variant="bodySmall">
+        <Typography className="mb-4 leading-6" numberOfLines={2} variant="bodySmall">
           {course.description}
         </Typography>
 
         {/* Progress Bar (Assignment Requirement) */}
         <View className="mb-6">
           <View className="flex-row justify-between items-center mb-2">
-            <Typography className="text-secondary uppercase font-sans-bold" variant="caption">
+            <Typography className="uppercase font-sans-bold" variant="caption">
               {t('common.progress') || 'Progress'}
             </Typography>
             <Typography className="text-primary font-sans-bold" variant="caption">
               {Math.round((course.progress || 0) * 100)}%
             </Typography>
           </View>
-          <View className="w-full h-2 bg-gray100 rounded-full overflow-hidden">
+          <View className="w-full h-2 rounded-full overflow-hidden bg-gray100">
             <View
               className="h-full bg-primary"
               style={{ width: `${Math.round((course.progress || 0) * 100)}%` }}
@@ -117,33 +117,30 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         </View>
 
         {/* Footer: Instructor & Stats */}
-        <View className="flex-row items-center justify-between border-t border-gray-50 pt-4">
+        <View className="flex-row items-center justify-between border-t pt-4 border-gray-50">
           {course.instructor && (
             <View className="flex-row items-center">
               <View style={{ width: 32, height: 32 }}>
                 <Image
-                  className="bg-gray200 border-2 border-white"
+                  className="border-2 bg-gray200 border-white"
                   source={{ uri: course.instructor.picture.thumbnail }}
                   style={{ width: '100%', height: '100%', borderRadius: 16 }}
                 />
               </View>
               <View className="ml-2.5">
-                <Typography
-                  className="text-gray-400 text-[10px] uppercase font-sans-bold"
-                  variant="caption"
-                >
+                <Typography className="text-[10px] uppercase font-sans-bold" variant="caption">
                   {t('common.instructor')}
                 </Typography>
-                <Typography className="text-black" variant="bodySmallSemiBold">
+                <Typography variant="bodySmallSemiBold">
                   {course.instructor.name.first} {course.instructor.name.last}
                 </Typography>
               </View>
             </View>
           )}
 
-          <View className="flex-row items-center bg-gray50 px-3 py-1.5 rounded-xl">
+          <View className="flex-row items-center px-3 py-1.5 rounded-xl bg-gray50">
             <Feather color={Colors.secondary} name="clock" size={14} />
-            <Typography className="ml-2 text-gray-500 font-sans-semibold" variant="caption">
+            <Typography className="ml-2 font-sans-semibold" variant="caption">
               12h
             </Typography>
           </View>

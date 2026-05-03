@@ -18,8 +18,27 @@ const Typography: React.FC<TypographyProps> = ({
   style,
   ...rest
 }) => {
+  // Auto-determine colors based on theme if not explicitly overridden in className
+  const hasColorClass = className.includes('text-');
+
+  // Revert to stable Light Mode colors
+  const baseColorClass = 'text-black';
+  const secondaryColorClass = 'text-secondary';
+
+  // Variants that typically use secondary/muted colors
+  const isSecondaryVariant = ['caption', 'bodySmall'].includes(variant);
+  const defaultColorClass = !hasColorClass
+    ? isSecondaryVariant
+      ? secondaryColorClass
+      : baseColorClass
+    : '';
+
   return (
-    <Text className={className} style={[TextStyles[variant], style]} {...rest}>
+    <Text
+      className={`${defaultColorClass} ${className}`}
+      style={[TextStyles[variant], style]}
+      {...rest}
+    >
       {children}
     </Text>
   );

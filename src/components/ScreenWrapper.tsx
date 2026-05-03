@@ -57,7 +57,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
           className="flex-1"
           resizeMode="cover"
           source={IMAGES.background}
-          style={[{ flex: 1 }, containerStyle]}
+          style={[containerStyle]}
         >
           {content}
           <FullscreenLoader visible={showLoader} />
@@ -67,7 +67,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   }
 
   return (
-    <View className="flex-1 bg-white" style={[{ flex: 1 }, containerStyle]}>
+    <View className="flex-1 bg-white" style={[containerStyle]}>
       {content}
       <FullscreenLoader visible={showLoader} />
     </View>

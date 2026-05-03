@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Platform, Pressable, TouchableOpacity, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
@@ -14,16 +14,16 @@ import { useNotifications } from '@/hooks/useNotifications';
 import { useSelectedLanguage } from '@/localization/utils';
 import { useBookmarkStore } from '@/store';
 import { useUserStore } from '@/store/useUserStore';
-import { Colors } from '@/theme/colors';
 
 const TAB_WIDTH = 160;
 
 export default function Profile() {
   const { t } = useTranslation();
-  const { user, logout, updateAvatar } = useUserStore();
+  const { user, logout, updateAvatar, enrolledCourses } = useUserStore();
   const { language, setLanguage } = useSelectedLanguage();
   const { sendLocalNotification } = useNotifications();
   const bookmarksCount = useBookmarkStore((state) => state.bookmarks.length);
+  const enrolledCount = enrolledCourses.length;
   const [isLogoutAlertVisible, setIsLogoutAlertVisible] = useState(false);
 
   // Animation for language toggle
@@ -84,7 +84,7 @@ export default function Profile() {
             onPress={pickImage}
           >
             {user?.avatar?.url ? (
-              <Image source={{ uri: user.avatar.url }} style={{ width: '100%', height: '100%' }} />
+              <Image className="w-full h-full" source={{ uri: user.avatar.url }} />
             ) : (
               <Typography className="text-primary uppercase" variant="h1">
                 {user?.username?.charAt(0) || 'U'}
@@ -117,7 +117,7 @@ export default function Profile() {
             <View className="w-[1px] h-10 bg-gray-200" />
             <View className="items-center flex-1">
               <Typography className="text-primary" variant="h3">
-                12
+                {enrolledCount}
               </Typography>
               <Typography className="text-secondary" variant="caption">
                 {t('common.enrolled')}
@@ -135,8 +135,25 @@ export default function Profile() {
           </View>
 
           {/* Animated Language Toggle */}
-          <View style={[styles.tabContainer, { width: TAB_WIDTH }]}>
-            <Animated.View style={[styles.activePill, animatedPillStyle]} />
+          <View
+            className="flex-row bg-gray100 rounded-2xl p-1 mb-8 relative h-12 items-center"
+            style={{ width: TAB_WIDTH }}
+          >
+            <Animated.View
+              className="absolute bg-white rounded-xl shadow-sm"
+              style={[
+                {
+                  width: '50%',
+                  height: '100%',
+                  left: 0,
+                  ...Platform.select({
+                    android: { elevation: 2 },
+                    ios: { elevation: 4 },
+                  }),
+                },
+                animatedPillStyle,
+              ]}
+            />
             <Pressable className="flex-1 items-center z-10" onPress={() => setLanguage('en')}>
               <Typography
                 className={language === 'en' ? 'text-primary' : 'text-secondary'}
@@ -177,32 +194,3 @@ export default function Profile() {
     </ScreenWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  tabContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#F3F4F6', // gray-100 equivalent
-    borderRadius: 16,
-    padding: 4,
-    marginBottom: 32,
-    position: 'relative',
-    height: 48,
-    alignItems: 'center',
-  },
-  activePill: {
-    position: 'absolute',
-    width: '50%',
-    height: '100%',
-    backgroundColor: Colors.white,
-    borderRadius: 12,
-    left: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    ...Platform.select({
-      android: { elevation: 2 },
-      ios: { elevation: 4 },
-    }),
-  },
-});

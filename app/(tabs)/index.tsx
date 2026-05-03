@@ -146,7 +146,7 @@ export default function CourseCatalog() {
         </View>
       </View>
 
-      <View className="flex-1 px-5" style={{ flex: 1 }}>
+      <View className="flex-1 px-5">
         {isLoadingCourses && !isRefetching ? (
           <View className="flex-1 justify-center items-center">
             <ActivityIndicator color={Colors.primary} size="large" />

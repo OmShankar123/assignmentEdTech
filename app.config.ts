@@ -20,6 +20,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: true,
     bundleIdentifier: Env.EXPO_PUBLIC_PACKAGE_NAME,
+    infoPlist: {
+      LSApplicationQueriesSchemes: ['mailto'],
+    },
   },
   android: {
     adaptiveIcon: {
@@ -28,6 +31,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
     edgeToEdgeEnabled: true,
     package: Env.EXPO_PUBLIC_PACKAGE_NAME,
+    intentFilters: [
+      {
+        action: 'VIEW',
+        data: {
+          scheme: 'mailto',
+        },
+      },
+    ],
   },
   web: {
     favicon: './src/assets/favicon.png',
