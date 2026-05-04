@@ -25,6 +25,7 @@ export default function Profile() {
   const bookmarksCount = useBookmarkStore((state) => state.bookmarks.length);
   const enrolledCount = enrolledCourses.length;
   const [isLogoutAlertVisible, setIsLogoutAlertVisible] = useState(false);
+  const [isProfilePickerVisible, setIsProfilePickerVisible] = useState(false);
 
   // Animation for language toggle
   const translateX = useSharedValue(language === 'en' ? 0 : 1);
@@ -44,19 +45,28 @@ export default function Profile() {
     setIsLogoutAlertVisible(true);
   };
 
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to make this work!');
+  const pickImage = async (useCamera: boolean = false) => {
+    const permissionResult = useCamera
+      ? await ImagePicker.requestCameraPermissionsAsync()
+      : await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.status !== 'granted') {
+      alert(`Sorry, we need ${useCamera ? 'camera' : 'gallery'} permissions to make this work!`);
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
+    const result = useCamera
+      ? await ImagePicker.launchCameraAsync({
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 1,
+        })
+      : await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ['images'],
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 1,
+        });
 
     if (!result.canceled) {
       const selectedImage = result.assets[0];
@@ -72,6 +82,10 @@ export default function Profile() {
     }
   };
 
+  const handleProfilePress = () => {
+    setIsProfilePickerVisible(true);
+  };
+
   return (
     <ScreenWrapper className="flex-1" showBackgroundShape={true}>
       <View className="px-5">
@@ -81,10 +95,14 @@ export default function Profile() {
           <TouchableOpacity
             activeOpacity={0.8}
             className="w-24 h-24 bg-primary/10 rounded-full justify-center items-center mb-4 overflow-hidden border-2 border-primary/20"
-            onPress={pickImage}
+            onPress={handleProfilePress}
           >
             {user?.avatar?.url ? (
-              <Image className="w-full h-full" source={{ uri: user.avatar.url }} />
+              <Image
+                className="w-full h-full"
+                source={{ uri: user.avatar.url }}
+                style={{ width: '100%', height: '100%' }}
+              />
             ) : (
               <Typography className="text-primary uppercase" variant="h1">
                 {user?.username?.charAt(0) || 'U'}
@@ -180,6 +198,17 @@ export default function Profile() {
           />
         </View>
       </View>
+
+      <BottomAlert
+        cancelText={t('common.gallery') || 'Gallery'}
+        confirmText={t('common.camera') || 'Camera'}
+        isVisible={isProfilePickerVisible}
+        message={t('common.choose_source') || 'Choose a source for your profile picture'}
+        title={t('common.update_profile_picture') || 'Update Profile Picture'}
+        onCancel={() => pickImage(false)}
+        onClose={() => setIsProfilePickerVisible(false)}
+        onConfirm={() => pickImage(true)}
+      />
 
       <BottomAlert
         cancelText={t('common.cancel')}

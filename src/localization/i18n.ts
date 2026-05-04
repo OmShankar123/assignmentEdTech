@@ -1,18 +1,14 @@
 import { initReactI18next } from 'react-i18next';
 import { I18nManager } from 'react-native';
-import * as Localization from 'expo-localization';
 import i18n from 'i18next';
 
 import { resources } from './resources';
 import { getLanguage } from './utils';
 
-// Get device language
-const deviceLanguage = Localization.getLocales()[0]?.languageCode ?? 'en';
-
 // Initialize i18next
 i18n.use(initReactI18next).init({
   resources,
-  lng: getLanguage() || deviceLanguage, // Device language
+  lng: getLanguage() || 'en', // Default to English
   fallbackLng: 'en', // Fallback to "en" if translation missing
   interpolation: {
     escapeValue: false, // React already escapes values

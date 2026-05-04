@@ -29,7 +29,19 @@
     "progress": "प्रगति",
     "email_app_missing": "इस डिवाइस पर कोई ईमेल ऐप नहीं मिला",
     "settings": "सेटिंग्स",
-    "dark_mode": "डार्क मोड"
+    "dark_mode": "डार्क मोड",
+    "download_started": "डाउनलोड शुरू हुआ",
+    "download_complete": "डाउनलोड पूरा हुआ",
+    "download_failed": "डाउनलोड विफल रहा",
+    "please_wait": "कृपया प्रतीक्षा करें...",
+    "camera": "कैमरा",
+    "gallery": "गैलरी",
+    "choose_source": "अपनी प्रोफ़ाइल तस्वीर के लिए एक स्रोत चुनें",
+    "update_profile_picture": "प्रोफ़ाइल तस्वीर अपडेट करें",
+    "expert": "विशेषज्ञ",
+    "enrollment": "नामांकन",
+    "student": "छात्र",
+    "enroll_now": "अभी नामांकन करें"
   },
   "course": {
     "content": "पाठ्यक्रम सामग्री",
@@ -39,7 +51,10 @@
     "students": "छात्र",
     "description": "विवरण",
     "total_price": "कुल मूल्य",
-    "enroll_now": "अभी नामांकन करें"
+    "enroll_now": "अभी नामांकन करें",
+    "resources": "पाठ्यक्रम सामग्री",
+    "syllabus": "पूर्ण पाठ्यक्रम",
+    "download_resources": "पीडीएफ डाउनलोड करें"
   },
   "categories": {
     "development": "विकास",
@@ -84,5 +99,8 @@
     "bookmark_milestone_body": "आपने 5 या अधिक पाठ्यक्रम बुकमार्क किए हैं। आज एक क्यों नहीं शुरू करते?",
     "profile_update_title": "प्रोफ़ाइल अपडेट की गई",
     "profile_update_body": "आपकी प्रोफ़ाइल तस्वीर सफलतापूर्वक अपडेट कर दी गई है!"
+  },
+  "portal": {
+    "welcome_msg": "स्वागत है, {{name}}! क्या आप अपनी सीखने की यात्रा शुरू करने के लिए तैयार हैं?"
   }
 }

@@ -50,7 +50,7 @@ export default function Login() {
     <ScreenWrapper scrollable showBackgroundShape={true}>
       <Header showBackButton={false} />
 
-      <View className="flex-1 justify-between pb-10 pt-5">
+      <View className="flex-1 justify-between pb-4 pt-5">
         <View>
           <Animated.View entering={FadeInDown.duration(800).damping(12)}>
             <Typography className="text-text text-left mb-2" variant="h1">

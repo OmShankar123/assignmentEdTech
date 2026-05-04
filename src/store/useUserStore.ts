@@ -42,6 +42,6 @@ export const useUserStore = createPersistedStore<UserState>('user-storage', (set
     await clearTokens();
     // Clear non-sensitive data from MMKV
     storage.clearAll();
-    set({ isLoggedIn: false, user: null });
+    set({ isLoggedIn: false, user: null, enrolledCourses: [] });
   },
 }));

@@ -29,7 +29,19 @@
     "progress": "Progress",
     "email_app_missing": "No email app found on this device",
     "settings": "Settings",
-    "dark_mode": "Dark Mode"
+    "dark_mode": "Dark Mode",
+    "download_started": "Download Started",
+    "download_complete": "Download Complete",
+    "download_failed": "Download Failed",
+    "please_wait": "Please wait...",
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "choose_source": "Choose a source for your profile picture",
+    "update_profile_picture": "Update Profile Picture",
+    "expert": "Expert",
+    "enrollment": "Enrollment",
+    "student": "Student",
+    "enroll_now": "Enroll Now"
   },
   "course": {
     "content": "Course Content",
@@ -39,7 +51,10 @@
     "students": "Students",
     "description": "Description",
     "total_price": "Total Price",
-    "enroll_now": "Enroll Now"
+    "enroll_now": "Enroll Now",
+    "resources": "Course Materials",
+    "syllabus": "Full Syllabus",
+    "download_resources": "Download PDF"
   },
   "categories": {
     "development": "Development",
@@ -84,5 +99,8 @@
     "bookmark_milestone_body": "You've bookmarked 5 or more courses. Why not start one today?",
     "profile_update_title": "Profile Updated",
     "profile_update_body": "Your profile picture has been updated successfully!"
+  },
+  "portal": {
+    "welcome_msg": "Welcome, {{name}}! Ready to start your learning journey?"
   }
 }

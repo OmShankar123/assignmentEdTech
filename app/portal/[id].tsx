@@ -15,7 +15,7 @@ import { Colors } from '@/theme/colors';
 export default function WebPortal() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, enrollCourse, enrolledCourses } = useUserStore();
   const { data: response, isLoading } = useCourseDetails({ variables: { id: id! } });
   const course = response?.data;
@@ -35,6 +35,7 @@ export default function WebPortal() {
       <html>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <!-- Lang: ${i18n.language} -->
         <style>
           body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -128,7 +129,7 @@ export default function WebPortal() {
       </body>
       </html>
     `;
-  }, [course, user, id, isEnrolled, t]);
+  }, [course, user, id, isEnrolled, t, i18n.language]);
 
   if (isLoading || !course) {
     return (
@@ -165,6 +166,7 @@ export default function WebPortal() {
       </View>
 
       <WebView
+        key={i18n.language}
         className="flex-1"
         originWhitelist={['*']}
         renderError={(errorName) => (

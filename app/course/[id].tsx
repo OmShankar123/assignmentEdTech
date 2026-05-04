@@ -14,8 +14,10 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
+import * as FileSystem from 'expo-file-system/legacy';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import * as Sharing from 'expo-sharing';
 
 import type { Course } from '@/api/courses/types';
 import { useCourseDetails } from '@/api/courses/use-course-details';
@@ -62,6 +64,45 @@ export default function CourseDetail() {
     }
   };
 
+  const handleDownload = async () => {
+    if (!course) return;
+
+    try {
+      // Mock PDF for demonstration
+      const fileUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+      const fileName = `${course.name.replace(/\s+/g, '_')}_Syllabus.pdf`;
+      const fileUri = `${FileSystem.documentDirectory}${fileName}`;
+
+      Toast.show({
+        type: 'info',
+        text1: t('common.download_started'),
+        text2: t('common.please_wait'),
+      });
+
+      const downloadResumable = FileSystem.createDownloadResumable(fileUrl, fileUri);
+      const result = await downloadResumable.downloadAsync();
+
+      if (result && result.uri) {
+        Toast.show({
+          type: 'success',
+          text1: t('common.download_complete'),
+          text2: fileName,
+        });
+
+        if (await Sharing.isAvailableAsync()) {
+          await Sharing.shareAsync(result.uri);
+        }
+      }
+    } catch (error) {
+      console.error('Download error:', error);
+      Toast.show({
+        type: 'error',
+        text1: t('common.download_failed'),
+        text2: t('common.something_went_wrong'),
+      });
+    }
+  };
+
   const handleEmail = async () => {
     if (!course) return;
     const subject = `Question about ${course.name}`;
@@ -103,7 +144,10 @@ export default function CourseDetail() {
     );
   }
 
-  const instructorImage = course.instructor?.picture?.large || course.instructor?.picture?.medium;
+  const instructorImage =
+    course.instructor?.picture?.large ||
+    course.instructor?.picture?.medium ||
+    course.instructor?.picture?.thumbnail;
 
   return (
     <View className="flex-1 bg-white">
@@ -208,9 +252,10 @@ export default function CourseDetail() {
               >
                 <View className="relative w-16 h-16">
                   <Image
-                    className="bg-gray-200 w-full h-full rounded-2xl"
+                    className="bg-gray-200"
                     contentFit="cover"
                     source={{ uri: instructorImage }}
+                    style={{ width: '100%', height: '100%', borderRadius: 16 }}
                     transition={300}
                   />
                   <View className="absolute -bottom-1 -right-1 rounded-full p-0.5 border bg-white border-gray-100">
@@ -258,6 +303,30 @@ export default function CourseDetail() {
                 <Typography variant="caption">{t('course.students')}</Typography>
                 <Typography variant="bodySmallSemiBold">1.5k +</Typography>
               </View>
+            </Animated.View>
+
+            {/* Resources Section */}
+            <Animated.View
+              className="border p-5 rounded-[28px] mb-8 bg-gray-50/80 border-gray-100"
+              entering={FadeInUp.delay(550).duration(600)}
+            >
+              <View className="flex-row justify-between items-center mb-4">
+                <View>
+                  <Typography className="uppercase font-sans-bold mb-1" variant="caption">
+                    {t('course.resources') || 'Course Materials'}
+                  </Typography>
+                  <Typography variant="h3">{t('course.syllabus') || 'Full Syllabus'}</Typography>
+                </View>
+                <View className="w-12 h-12 rounded-full bg-white items-center justify-center border border-gray-100">
+                  <Feather color={Colors.primary} name="file-text" size={24} />
+                </View>
+              </View>
+              <Button
+                className="h-12"
+                leftIcon={<Feather color={Colors.white} name="download" size={18} />}
+                title={t('course.download_resources') || 'Download PDF'}
+                onPress={handleDownload}
+              />
             </Animated.View>
 
             {/* About Section */}

@@ -12,6 +12,7 @@ interface BottomAlertProps {
   confirmText: string;
   cancelText: string;
   onConfirm: () => void;
+  onCancel?: () => void;
   type?: 'default' | 'destructive';
 }
 
@@ -23,6 +24,7 @@ const BottomAlert = ({
   confirmText,
   cancelText,
   onConfirm,
+  onCancel,
   type = 'default',
 }: BottomAlertProps) => {
   const insets = useSafeAreaInsets();
@@ -49,7 +51,12 @@ const BottomAlert = ({
             <View className="flex-row w-full gap-4">
               <Pressable
                 className="flex-1 h-14 bg-gray-100 rounded-2xl justify-center items-center active:bg-gray-200"
-                onPress={onClose}
+                onPress={() => {
+                  if (onCancel) {
+                    onCancel();
+                  }
+                  onClose();
+                }}
               >
                 <Typography className="text-secondary" variant="button">
                   {cancelText}

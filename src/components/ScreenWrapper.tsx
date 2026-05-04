@@ -27,7 +27,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   const insets = useSafeAreaInsets();
 
   const containerStyle = {
-    // paddingBottom: insets.bottom,
+    paddingBottom: Math.max(insets.bottom, 16),
     paddingTop: excludeTopInset ? 0 : insets.top,
   };
 
